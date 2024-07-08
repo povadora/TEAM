@@ -1,5 +1,5 @@
-// src/households/entities/household.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class Household {
@@ -99,4 +99,7 @@ export class Household {
     nullable: true,
   })
   numberOfFourWheeledVehicles: number;
+
+  @OneToMany(() => Inhabitant, (inhabitant) => inhabitant.household)
+  inhabitants: Inhabitant[];
 }

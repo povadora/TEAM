@@ -6,9 +6,17 @@ import { Account } from './barangay-entities/account.entity';
 import { AccountsModule } from './barangay-module/accounts.module';
 import { HouseholdModule } from './barangay-module/household.module';
 import { Household } from './barangay-entities/household.entity';
+import { ConfigModule } from '@nestjs/config';
+import { InhabitantModule } from './inhabitant/inhabitant.module';
+import { Inhabitant } from './inhabitant/entities/inhabitant.entity';
+import { OtherInhabitantsModule } from './other-inhabitants/other-inhabitants.module';
+import { OtherInhabitant } from './other-inhabitants/entities/other-inhabitant.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'mariadb',
       host: 'localhost',
@@ -16,11 +24,13 @@ import { Household } from './barangay-entities/household.entity';
       username: 'bms',
       password: 'bms123',
       database: 'barangay_db',
-      entities: [Account, Household],
+      entities: [Account, Household, Inhabitant, OtherInhabitant],
       synchronize: true,
     }),
     AccountsModule,
     HouseholdModule,
+    InhabitantModule,
+    OtherInhabitantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

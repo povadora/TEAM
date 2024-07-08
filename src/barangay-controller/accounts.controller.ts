@@ -23,17 +23,17 @@ export class AccountsController {
     return this.accountsService.createAccount(createAccountDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('registered-account')
   findAllRegisteredAccount() {
     return this.accountsService.findAllRegisteredAccount();
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('registered-account/:id')
   findOneRegisteredAccount(@Param('id') id: string) {
     return this.accountsService.findOneRegisteredAccount(+id);
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Patch('update-account/:id')
   updateAccount(
     @Param('id') id: string,
@@ -41,7 +41,7 @@ export class AccountsController {
   ) {
     return this.accountsService.updateAccount(+id, updateAccountDto);
   }
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete('delete-account/:id')
   removeAccount(@Param('id') id: string) {
     return this.accountsService.removeAccount(+id);

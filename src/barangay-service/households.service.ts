@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateHouseholdDto } from "src/barangay-dto's/create-household.dto";
 import { UpdateHouseholdDto } from "src/barangay-dto's/update-household.dto";
 import { Household } from 'src/barangay-entities/household.entity';
+import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -10,63 +11,9 @@ export class HouseholdsService {
   constructor(
     @InjectRepository(Household)
     private readonly householdRepository: Repository<Household>,
+    @InjectRepository(Inhabitant)
+    private readonly inhabitantRepository: Repository<Inhabitant>,
   ) {}
-
-  // async createHousehold(
-  //   createHouseholdDto: CreateHouseholdDto,
-  //   file: Express.Multer.File,
-  // ): Promise<Household> {
-  //   const {
-  //     householdNumber,
-  //     householdName,
-  //     streetName,
-  //     subdivision,
-  //     zone,
-  //     sitio,
-  //     purok,
-  //     barangay,
-  //     municipality,
-  //     province,
-  //     structureMaterials,
-  //     numberOfRooms,
-  //     numberOfToilets,
-  //     allowBoarders,
-  //     hasRentalPermit,
-  //     hasBackyardGarden,
-  //     otherIncomeSource,
-  //     numberOfPets,
-  //     numberOfTwoWheeledVehicles,
-  //     numberOfThreeWheeledVehicles,
-  //     numberOfFourWheeledVehicles,
-  //   } = createHouseholdDto;
-
-  //   const newHousehold = this.householdRepository.create({
-  //     householdNumber,
-  //     householdPhoto: file.path, // ma save ang file path sa databaase
-  //     householdName,
-  //     streetName,
-  //     subdivision,
-  //     zone,
-  //     sitio,
-  //     purok,
-  //     barangay,
-  //     municipality,
-  //     province,
-  //     structureMaterials,
-  //     numberOfRooms,
-  //     numberOfToilets,
-  //     allowBoarders,
-  //     hasRentalPermit,
-  //     hasBackyardGarden,
-  //     otherIncomeSource,
-  //     numberOfPets,
-  //     numberOfTwoWheeledVehicles,
-  //     numberOfThreeWheeledVehicles,
-  //     numberOfFourWheeledVehicles,
-  //   });
-  //   return await this.householdRepository.save(newHousehold);
-  // }
-  //    or **** nag trial rako sa babaw
 
   async createHousehold(
     createHouseholdDto: CreateHouseholdDto,
@@ -115,5 +62,13 @@ export class HouseholdsService {
     if (result.affected === 0) {
       throw new NotFoundException(`Account with ID ${householdId} not found`);
     }
+  }
+  // kari ag sa mga inhabitants***
+
+  async findInhabitant(householdId: number): Promise<Inhabitant[]> {
+    return this.inhabitantRepository.find({
+      where: { household: { householdId: householdId } },
+      relations: ['household'],
+    });
   }
 }

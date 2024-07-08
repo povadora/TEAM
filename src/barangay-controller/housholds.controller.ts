@@ -15,6 +15,7 @@ import { diskStorage } from 'multer';
 import { CreateHouseholdDto } from "src/barangay-dto's/create-household.dto";
 import { UpdateHouseholdDto } from "src/barangay-dto's/update-household.dto";
 import { HouseholdsService } from 'src/barangay-service/households.service';
+import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
 
 @Controller('household')
 export class HouseholdController {
@@ -43,18 +44,12 @@ export class HouseholdController {
     return this.householdService.createHousehold(createHouseholdDto, file);
   }
 
-  //     mag trial sako
-  // //   @Post('create-household')
-  // //   createHousehold(@Body() createHouseholdDto: CreateHouseholdDto) {
-  // //     return this.householdService.createHousehold(createHouseholdDto);
-  // //   }
-
   @Get('all-household')
   findAllHousehold() {
     return this.householdService.findAllHousehold();
   }
 
-  @Get('household/:id')
+  @Get('/:id')
   findOneHousehold(@Param('id') id: string) {
     return this.householdService.findOneHousehold(+id);
   }
@@ -86,5 +81,9 @@ export class HouseholdController {
   @Delete('delete-household/:id')
   removehousehold(@Param('id') id: string) {
     return this.householdService.removeHousehold(+id);
+  }
+  @Get(':id/inhabitants') // kanang :id is is sa household ja ag inhabitants is ang mga imhabitants nga registered ana.
+  async findInhabitants(@Param('id') id: string): Promise<Inhabitant[]> {
+    return this.householdService.findInhabitant(+id);
   }
 }

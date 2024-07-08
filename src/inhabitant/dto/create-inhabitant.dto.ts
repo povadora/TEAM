@@ -1,0 +1,109 @@
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsDate,
+  IsEmail,
+  IsEnum,
+} from 'class-validator';
+import {
+  householdRole,
+  inhabitantBloodType,
+  inhabitantCivilStatus,
+  inhabitantGender,
+  studentDetails,
+} from '../entities/inhabitant.entity';
+
+export class CreateInhabitantDto {
+  householdId: number;
+
+  @IsOptional()
+  @IsString()
+  profilePhoto: string;
+
+  @IsEnum(householdRole)
+  householdRole: householdRole;
+
+  @IsBoolean()
+  isRepresentative: boolean;
+
+  @IsString()
+  firstName: string;
+
+  @IsOptional()
+  @IsString()
+  middleName?: string;
+
+  @IsString()
+  lastName: string;
+
+  @IsOptional()
+  @IsEnum(inhabitantGender)
+  gender: inhabitantGender;
+
+  @IsOptional()
+  @IsDate()
+  birthday: Date;
+
+  @IsOptional()
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @IsEnum(inhabitantCivilStatus)
+  civilStatus: inhabitantCivilStatus;
+
+  @IsOptional()
+  @IsString()
+  mobileNumber: string;
+
+  @IsOptional()
+  @IsEnum(inhabitantBloodType)
+  bloodType: inhabitantBloodType;
+
+  @IsOptional()
+  @IsString()
+  healthRemarks: string;
+
+  @IsBoolean()
+  isPersonWithDisability: boolean;
+
+  @IsOptional()
+  @IsString()
+  disabilityDetails: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isPregnant: boolean;
+
+  @IsOptional()
+  @IsDate()
+  expectedLabourDate: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  isSingleParent: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isStudent: boolean;
+
+  @IsOptional()
+  @IsEnum(studentDetails)
+  studentDetails: studentDetails;
+  @IsOptional()
+  @IsBoolean()
+  isRegisteredVoter: boolean;
+
+  @IsOptional()
+  @IsString()
+  placeOfRegistration: string;
+
+  @IsOptional()
+  @IsString()
+  occupation: string;
+
+  @IsOptional()
+  @IsString()
+  currentOccupationPlace: string;
+}
