@@ -48,12 +48,12 @@ export class InhabitantController {
     return this.inhabitantService.findAllInhabitants();
   }
 
-  @Get('inhabitant/:id')
-  findOneInhabitant(@Param('id') id: string) {
-    return this.inhabitantService.findOneInhabitant(+id);
+  @Get('inhabitant/:uuid')
+  findOneInhabitant(@Param('uuid') uuid: string) {
+    return this.inhabitantService.findOneInhabitant(uuid);
   }
 
-  @Patch('update-inhabitant/:id')
+  @Patch('update-inhabitant/:uuid')
   @UseInterceptors(
     FileInterceptor('profilePhoto', {
       storage: diskStorage({
@@ -70,19 +70,19 @@ export class InhabitantController {
     }),
   )
   updateInhabitant(
-    @Param('id') id: string,
+    @Param('uuid') uuid: string,
     @Body() updateInhabitantDto: UpdateInhabitantDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.inhabitantService.updateInhabitant(
-      +id,
+      uuid,
       updateInhabitantDto,
       file,
     );
   }
 
-  @Delete('delete-inhabitant/:id')
-  removeInhabitant(@Param('id') id: string) {
-    return this.inhabitantService.removeInhabitant(+id);
+  @Delete('delete-inhabitant/:uuid')
+  removeInhabitant(@Param('uuid') uuid: string) {
+    return this.inhabitantService.removeInhabitant(uuid);
   }
 }

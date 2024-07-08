@@ -49,12 +49,12 @@ export class HouseholdController {
     return this.householdService.findAllHousehold();
   }
 
-  @Get('/:id')
-  findOneHousehold(@Param('id') id: string) {
-    return this.householdService.findOneHousehold(+id);
+  @Get('/:uuid')
+  findOneHousehold(@Param('uuid') uuid: string) {
+    return this.householdService.findOneHousehold(uuid);
   }
 
-  @Patch('update-household/:id')
+  @Patch('update-household/:uuid')
   @UseInterceptors(
     FileInterceptor('householdPhoto', {
       storage: diskStorage({
@@ -71,19 +71,24 @@ export class HouseholdController {
     }),
   )
   updateHousehold(
-    @Param('id') id: string,
+    @Param('uuid') uuid: string,
     @Body() updateHouseholdDto: UpdateHouseholdDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.householdService.updateHousehold(+id, updateHouseholdDto, file);
+    return this.householdService.updateHousehold(
+      uuid,
+      updateHouseholdDto,
+      file,
+    );
   }
 
-  @Delete('delete-household/:id')
-  removehousehold(@Param('id') id: string) {
-    return this.householdService.removeHousehold(+id);
+  @Delete('delete-household/:uuid')
+  removehousehold(@Param('uuid') uuid: string) {
+    return this.householdService.removeHousehold(uuid);
   }
-  @Get(':id/inhabitants') // kanang :id is is sa household ja ag inhabitants is ang mga imhabitants nga registered ana.
-  async findInhabitants(@Param('id') id: string): Promise<Inhabitant[]> {
-    return this.householdService.findInhabitant(+id);
+
+  @Get(':uuid/inhabitants')
+  async findInhabitants(@Param('uuid') uuid: string): Promise<Inhabitant[]> {
+    return this.householdService.findInhabitant(uuid);
   }
 }

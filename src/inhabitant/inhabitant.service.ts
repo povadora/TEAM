@@ -20,7 +20,7 @@ export class InhabitantService {
     file: Express.Multer.File,
   ): Promise<Inhabitant> {
     const household = await this.householdsRepository.findOne({
-      where: { householdId: createInhabitantDto.householdId },
+      where: { householdUuid: createInhabitantDto.householdUuid },
     });
     if (!household) {
       throw new NotFoundException('Household not found');
@@ -42,42 +42,61 @@ export class InhabitantService {
     return this.inhabitantsRepository.find({ relations: ['household'] });
   }
 
-  async findOneInhabitant(id: number): Promise<Inhabitant> {
+  async findOneInhabitant(uuid: string): Promise<Inhabitant> {
     const inhabitant = await this.inhabitantsRepository.findOne({
-      where: { inhabitantId: id },
+      where: { InhabitantUuid: uuid },
       relations: ['household'],
     });
     if (!inhabitant) {
-      throw new NotFoundException(`Inhabitant with ID ${id} not found`);
+      throw new NotFoundException(`Inhabitant with ID ${uuid} not found`);
     }
     return inhabitant;
   }
 
   async updateInhabitant(
-    id: number,
+    uuid: string,
     updateInhabitantDto: UpdateInhabitantDto,
     file?: Express.Multer.File,
   ): Promise<Inhabitant> {
-    const inhabitant = await this.inhabitantsRepository.preload({
-      inhabitantId: id,
-      ...updateInhabitantDto,
-    });
+    //   const inhabitant = await this.inhabitantsRepository.preload({
+    //     inhabitantId: uuid,
+    //     ...updateInhabitantDto,
+    //   });
 
+    //   if (!inhabitant) {
+    //     throw new NotFoundException(`Inhabitant with ID ${uuid} not found`);
+    //   }
+
+    //   if (file) {
+    //     inhabitant.profilePhoto = file.path;
+    //   }
+
+    //   return this.inhabitantsRepository.save(inhabitant);
+    // }
+
+    const inhabitant = await this.inhabitantsRepository.findOne({
+      where: { InhabitantUuid: uuid },
+    });
     if (!inhabitant) {
-      throw new NotFoundException(`Inhabitant with ID ${id} not found`);
+      throw new NotFoundException(`Inhabitant with UUID ${uuid} not found`);
     }
+
+    const updatedInhabitant = {
+      ...inhabitant,
+      ...updateInhabitantDto,
+    };
 
     if (file) {
-      inhabitant.profilePhoto = file.path;
+      updatedInhabitant.profilePhoto = file.path;
     }
 
-    return this.inhabitantsRepository.save(inhabitant);
+    return this.inhabitantsRepository.save(updatedInhabitant);
   }
 
-  async removeInhabitant(id: number): Promise<void> {
-    const result = await this.inhabitantsRepository.delete(id);
+  async removeInhabitant(uuid: string): Promise<void> {
+    const result = await this.inhabitantsRepository.delete(uuid);
     if (result.affected === 0) {
-      throw new NotFoundException(`Inhabitant with ID ${id} not found`);
+      throw new NotFoundException(`Inhabitant with ID ${uuid} not found`);
     }
   }
 }

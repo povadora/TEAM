@@ -19,56 +19,70 @@ export class HouseholdsService {
     createHouseholdDto: CreateHouseholdDto,
     file: Express.Multer.File,
   ): Promise<Household> {
-    const newHousehold = this.householdRepository.create(createHouseholdDto);
-    newHousehold.householdPhoto = file.path; // ma save ang file path sa database
+    const newHousehold = this.householdRepository.create({
+      ...createHouseholdDto,
+    });
+    newHousehold.householdPhoto = file.path;
     return this.householdRepository.save(newHousehold);
   }
 
-  async findAllHousehold(): Promise<Household[]> {
-    return await this.householdRepository.find();
-  }
-
-  async findOneHousehold(householdId: number): Promise<Household> {
-    const household = await this.householdRepository.findOneBy({ householdId });
+  async findOneHousehold(householdUuid: string): Promise<Household> {
+    const household = await this.householdRepository.findOne({
+      where: { householdUuid },
+    });
     if (!household) {
-      throw new NotFoundException(`Account with ID ${householdId} not found`);
+      throw new NotFoundException(
+        `Household with UUID ${householdUuid} not found`,
+      );
     }
     return household;
   }
 
   async updateHousehold(
-    id: number,
+    householdUuid: string,
     updateHouseholdDto: UpdateHouseholdDto,
     file?: Express.Multer.File,
   ): Promise<Household> {
-    const household = await this.householdRepository.preload({
-      householdId: id,
-      ...updateHouseholdDto,
+    const household = await this.householdRepository.findOne({
+      where: { householdUuid },
     });
 
     if (!household) {
-      throw new NotFoundException(`Household with ID ${id} not found`);
+      throw new NotFoundException(
+        `Household with UUID ${householdUuid} not found`,
+      );
     }
 
+    // Update fields if provided
+    if (updateHouseholdDto) {
+      Object.assign(household, updateHouseholdDto);
+    }
+
+    // Update photo if new file uploaded
     if (file) {
-      household.householdPhoto = file.path; // Update the file path if a new file is uploaded
+      household.householdPhoto = file.path;
     }
 
     return this.householdRepository.save(household);
   }
 
-  async removeHousehold(householdId: number): Promise<void> {
-    const result = await this.householdRepository.delete(householdId);
+  async removeHousehold(householdUuid: string): Promise<void> {
+    const result = await this.householdRepository.delete({ householdUuid });
     if (result.affected === 0) {
-      throw new NotFoundException(`Account with ID ${householdId} not found`);
+      throw new NotFoundException(
+        `Household with UUID ${householdUuid} not found`,
+      );
     }
   }
-  // kari ag sa mga inhabitants***
 
-  async findInhabitant(householdId: number): Promise<Inhabitant[]> {
+  async findInhabitant(householdUuid: string): Promise<Inhabitant[]> {
     return this.inhabitantRepository.find({
-      where: { household: { householdId: householdId } },
+      where: { household: { householdUuid } },
       relations: ['household'],
     });
+  }
+
+  async findAllHousehold(): Promise<Household[]> {
+    return await this.householdRepository.find();
   }
 }

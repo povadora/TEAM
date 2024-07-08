@@ -1,11 +1,28 @@
 import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Generated,
+} from 'typeorm';
 
 @Entity()
 export class Household {
   @PrimaryGeneratedColumn({ name: 'household_id' })
   householdId: number;
 
+  @Column({ name: 'household_uuid', type: 'uuid', unique: true })
+  @Generated('uuid')
+  householdUuid: string;
+
+  // @Column({ type: 'uuid', unique: true })
+  // uuid: string;
+
+  // @BeforeInsert()
+  // generateUuid() {
+  //   this.uuid = uuidv4();
+  // }
   @Column({
     name: 'household_photo',
     type: 'varchar',

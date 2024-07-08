@@ -15,7 +15,8 @@ import {
 } from '../entities/inhabitant.entity';
 
 export class CreateInhabitantDto {
-  householdId: number;
+  @IsString()
+  householdUuid: string;
 
   @IsOptional()
   @IsString()

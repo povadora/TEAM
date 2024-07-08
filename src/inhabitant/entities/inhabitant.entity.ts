@@ -5,6 +5,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  Generated,
 } from 'typeorm';
 
 export enum householdRole {
@@ -49,15 +50,17 @@ export enum studentDetails {
   COLLEGE = 'College',
 }
 
-('Elementary, Highschool, SeniorHighschool, College');
-
 @Entity()
 export class Inhabitant {
   @PrimaryGeneratedColumn({ name: 'inhabitant_Id' })
   inhabitantId: number;
 
+  @Column({ name: 'inhabitant_uuid', type: 'uuid', unique: true })
+  @Generated('uuid')
+  InhabitantUuid: string;
+
   @ManyToOne(() => Household, (household) => household.inhabitants)
-  @JoinColumn({ name: 'household_id' })
+  @JoinColumn({ name: 'household_uuid' })
   household: Household;
 
   @Column({
