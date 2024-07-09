@@ -15,14 +15,34 @@ export class HouseholdsService {
     private readonly inhabitantRepository: Repository<Inhabitant>,
   ) {}
 
+  private setDefaultValues(
+    dto: Partial<CreateHouseholdDto>,
+  ): Partial<CreateHouseholdDto> {
+    return {
+      numberOfRooms: dto.numberOfRooms || 0,
+      numberOfToilets: dto.numberOfToilets || 0,
+      numberOfPets: dto.numberOfPets || 0,
+      numberOfTwoWheeledVehicles: dto.numberOfTwoWheeledVehicles || 0,
+      numberOfThreeWheeledVehicles: dto.numberOfThreeWheeledVehicles || 0,
+      numberOfFourWheeledVehicles: dto.numberOfFourWheeledVehicles || 0,
+      ...dto,
+    };
+  }
+
   async createHousehold(
     createHouseholdDto: CreateHouseholdDto,
     file: Express.Multer.File,
   ): Promise<Household> {
-    const newHousehold = this.householdRepository.create({
-      ...createHouseholdDto,
-    });
-    newHousehold.householdPhoto = file.path;
+    const householdDtoWithDefaults = this.setDefaultValues(createHouseholdDto);
+
+    const newHousehold = this.householdRepository.create(
+      householdDtoWithDefaults,
+    );
+
+    if (file) {
+      newHousehold.householdPhoto = file.path;
+    }
+
     return this.householdRepository.save(newHousehold);
   }
 

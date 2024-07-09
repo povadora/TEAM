@@ -16,13 +16,6 @@ export class Household {
   @Generated('uuid')
   householdUuid: string;
 
-  // @Column({ type: 'uuid', unique: true })
-  // uuid: string;
-
-  // @BeforeInsert()
-  // generateUuid() {
-  //   this.uuid = uuidv4();
-  // }
   @Column({
     name: 'household_photo',
     type: 'varchar',
@@ -71,10 +64,18 @@ export class Household {
   })
   structureMaterials: string;
 
-  @Column({ name: 'number_of_rooms', type: 'int', nullable: true })
+  @Column({
+    name: 'number_of_rooms',
+    type: 'int',
+    default: 0,
+  })
   numberOfRooms: number;
 
-  @Column({ name: 'number_of_toilets', type: 'int', nullable: true })
+  @Column({
+    name: 'number_of_toilets',
+    type: 'int',
+    default: 0,
+  })
   numberOfToilets: number;
 
   @Column({ name: 'allow_boarders', type: 'boolean', nullable: true })
@@ -93,27 +94,31 @@ export class Household {
   })
   otherIncomeSource: string;
 
-  @Column({ name: 'number_of_pets', type: 'int', nullable: true })
+  @Column({
+    name: 'number_of_pets',
+    type: 'int',
+    default: 0,
+  })
   numberOfPets: number;
 
   @Column({
     name: 'number_of_two_wheeled_vehicles',
     type: 'int',
-    nullable: true,
+    default: 0,
   })
   numberOfTwoWheeledVehicles: number;
 
   @Column({
     name: 'number_of_three_wheeled_vehicles',
     type: 'int',
-    nullable: true,
+    default: 0,
   })
   numberOfThreeWheeledVehicles: number;
 
   @Column({
     name: 'number_of_four_wheeled_vehicles',
     type: 'int',
-    nullable: true,
+    default: 0,
   })
   numberOfFourWheeledVehicles: number;
 

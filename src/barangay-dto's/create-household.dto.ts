@@ -54,7 +54,7 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsInt()
-  numberOfRooms: number;
+  numberOfRooms: number = 0;
 
   @IsOptional()
   @IsInt()
