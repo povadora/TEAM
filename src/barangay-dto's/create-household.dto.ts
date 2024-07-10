@@ -54,23 +54,23 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsInt()
-  numberOfRooms: number = 0;
+  numberOfRooms: number | null;
 
   @IsOptional()
   @IsInt()
-  numberOfToilets: number;
+  numberOfToilets: number | null;
 
   @IsOptional()
   @IsBoolean()
-  allowBoarders: boolean;
+  allowBoarders: boolean | null;
 
   @IsOptional()
   @IsBoolean()
-  hasRentalPermit: boolean;
+  hasRentalPermit: boolean | null;
 
   @IsOptional()
   @IsBoolean()
-  hasBackyardGarden: boolean;
+  hasBackyardGarden: boolean | null;
 
   @IsOptional()
   @IsString()
@@ -78,17 +78,17 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsInt()
-  numberOfPets: number;
+  numberOfPets: number | null;
 
   @IsOptional()
   @IsInt()
-  numberOfTwoWheeledVehicles: number;
+  numberOfTwoWheeledVehicles: number | null;
 
   @IsOptional()
   @IsInt()
-  numberOfThreeWheeledVehicles: number;
+  numberOfThreeWheeledVehicles: number | null;
 
   @IsOptional()
   @IsInt()
-  numberOfFourWheeledVehicles: number;
+  numberOfFourWheeledVehicles: number | null;
 }

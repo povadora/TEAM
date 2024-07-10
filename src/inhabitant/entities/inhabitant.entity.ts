@@ -103,8 +103,11 @@ export class Inhabitant {
   })
   gender: inhabitantGender;
 
-  @Column({ type: 'date', nullable: true })
-  birthday: Date;
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  birthday: Date | null;
 
   @Column({ nullable: true })
   email: string;

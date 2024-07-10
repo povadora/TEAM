@@ -5,6 +5,7 @@ import {
   IsDate,
   IsEmail,
   IsEnum,
+  IsDateString,
 } from 'class-validator';
 import {
   householdRole,
@@ -43,8 +44,8 @@ export class CreateInhabitantDto {
   gender: inhabitantGender;
 
   @IsOptional()
-  @IsDate()
-  birthday: Date;
+  @IsDateString({})
+  birthday: string | null;
 
   @IsOptional()
   @IsEmail()
@@ -92,6 +93,7 @@ export class CreateInhabitantDto {
   @IsOptional()
   @IsEnum(studentDetails)
   studentDetails: studentDetails;
+
   @IsOptional()
   @IsBoolean()
   isRegisteredVoter: boolean;

@@ -67,25 +67,25 @@ export class Household {
   @Column({
     name: 'number_of_rooms',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfRooms: number;
+  numberOfRooms: number | null;
 
   @Column({
     name: 'number_of_toilets',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfToilets: number;
+  numberOfToilets: number | null;
 
   @Column({ name: 'allow_boarders', type: 'boolean', nullable: true })
-  allowBoarders: boolean;
+  allowBoarders: boolean | null;
 
   @Column({ name: 'has_rental_permit', type: 'boolean', nullable: true })
-  hasRentalPermit: boolean;
+  hasRentalPermit: boolean | null;
 
   @Column({ name: 'has_backyard_garden', type: 'boolean', nullable: true })
-  hasBackyardGarden: boolean;
+  hasBackyardGarden: boolean | null;
 
   @Column({
     name: 'other_income_source',
@@ -97,30 +97,30 @@ export class Household {
   @Column({
     name: 'number_of_pets',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfPets: number;
+  numberOfPets: number | null;
 
   @Column({
     name: 'number_of_two_wheeled_vehicles',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfTwoWheeledVehicles: number;
+  numberOfTwoWheeledVehicles: number | null;
 
   @Column({
     name: 'number_of_three_wheeled_vehicles',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfThreeWheeledVehicles: number;
+  numberOfThreeWheeledVehicles: number | null;
 
   @Column({
     name: 'number_of_four_wheeled_vehicles',
     type: 'int',
-    default: 0,
+    nullable: true,
   })
-  numberOfFourWheeledVehicles: number;
+  numberOfFourWheeledVehicles: number | null;
 
   @OneToMany(() => Inhabitant, (inhabitant) => inhabitant.household)
   inhabitants: Inhabitant[];

@@ -26,8 +26,17 @@ export class InhabitantService {
       throw new NotFoundException('Household not found');
     }
 
-    const newInhabitant = this.inhabitantsRepository.create({
+    // Preprocess the DTO to convert empty strings to null
+    const cleanDto = {
       ...createInhabitantDto,
+      birthday:
+        createInhabitantDto.birthday === ''
+          ? null
+          : createInhabitantDto.birthday,
+    };
+
+    const newInhabitant = this.inhabitantsRepository.create({
+      ...cleanDto,
       household,
     });
 
