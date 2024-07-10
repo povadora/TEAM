@@ -59,7 +59,7 @@ export class Household {
 
   @Column({
     name: 'structure_materials',
-    type: 'varchar',
+    type: 'text',
     nullable: true,
   })
   structureMaterials: string;

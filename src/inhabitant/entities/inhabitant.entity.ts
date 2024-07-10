@@ -73,12 +73,12 @@ export class Inhabitant {
     name: 'household_role',
     type: 'enum',
     enum: householdRole,
-    nullable: true,
   })
   householdRole: householdRole;
 
   @Column({
     name: 'is_representative',
+    type: 'boolean',
     default: false,
   })
   isRepresentative: boolean;
@@ -142,7 +142,7 @@ export class Inhabitant {
 
   @Column({
     name: 'is_person_with_disability',
-    default: false,
+    nullable: true,
   })
   isPersonWithDisability: boolean;
 
@@ -154,7 +154,7 @@ export class Inhabitant {
 
   @Column({
     name: 'is_pregnant',
-    default: false,
+    nullable: true,
   })
   isPregnant: boolean;
 
@@ -168,12 +168,14 @@ export class Inhabitant {
   @Column({
     name: 'is_single_parent',
     default: false,
+    nullable: true,
   })
   isSingleParent: boolean;
 
   @Column({
     name: 'is_student',
     default: false,
+    nullable: true,
   })
   isStudent: boolean;
 
@@ -187,6 +189,7 @@ export class Inhabitant {
 
   @Column({
     name: 'is_registered_voter',
+    type: 'boolean',
     default: false,
   })
   isRegisteredVoter: boolean;

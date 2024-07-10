@@ -2,7 +2,6 @@ import {
   IsString,
   IsOptional,
   IsBoolean,
-  IsDate,
   IsEmail,
   IsEnum,
   IsDateString,
@@ -26,6 +25,7 @@ export class CreateInhabitantDto {
   @IsEnum(householdRole)
   householdRole: householdRole;
 
+  @IsOptional()
   @IsBoolean()
   isRepresentative: boolean;
 
@@ -34,7 +34,7 @@ export class CreateInhabitantDto {
 
   @IsOptional()
   @IsString()
-  middleName?: string;
+  middleName: string;
 
   @IsString()
   lastName: string;
@@ -67,6 +67,7 @@ export class CreateInhabitantDto {
   @IsString()
   healthRemarks: string;
 
+  @IsOptional()
   @IsBoolean()
   isPersonWithDisability: boolean;
 
@@ -79,8 +80,8 @@ export class CreateInhabitantDto {
   isPregnant: boolean;
 
   @IsOptional()
-  @IsDate()
-  expectedLabourDate: Date;
+  @IsDateString({})
+  expectedLabourDate: Date | null;
 
   @IsOptional()
   @IsBoolean()

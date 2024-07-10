@@ -6,6 +6,26 @@ import { CreateInhabitantDto } from './dto/create-inhabitant.dto';
 import { UpdateInhabitantDto } from './dto/update-inhabitant.dto';
 import { Household } from 'src/barangay-entities/household.entity';
 
+function convertToBoolean(value: any): boolean {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true';
+  }
+  return false;
+}
+
+const convertEmptyStringToNull = (value: any) => {
+  return value === '' ? null : value;
+};
+
+function convertEmptyToNullBoolean(value: any): boolean | null {
+  if (value === '' || value === null || value === undefined) {
+    return null;
+  }
+  return value === 'true' || value === true;
+}
 @Injectable()
 export class InhabitantService {
   constructor(
@@ -14,6 +34,55 @@ export class InhabitantService {
     @InjectRepository(Household)
     private readonly householdsRepository: Repository<Household>,
   ) {}
+
+  // async createInhabitant(
+  //   createInhabitantDto: CreateInhabitantDto,
+  //   file: Express.Multer.File,
+  // ): Promise<Inhabitant> {
+  //   const household = await this.householdsRepository.findOne({
+  //     where: { householdUuid: createInhabitantDto.householdUuid },
+  //   });
+  //   if (!household) {
+  //     throw new NotFoundException('Household not found');
+  //   }
+
+  //   const isRepresentative = createInhabitantDto.isRepresentative === 'true';
+  //   const cleanDto = {
+  //     ...createInhabitantDto,
+  //     isRepresentative,
+  //     gender: convertEmptyStringToNull(createInhabitantDto.gender),
+  //     birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
+  //     civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
+  //     bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
+  //     expectedLabourDate: convertEmptyStringToNull(
+  //       createInhabitantDto.expectedLabourDate,
+  //     ),
+  //     studentDetails: convertEmptyStringToNull(
+  //       createInhabitantDto.studentDetails,
+  //     ),
+
+  //     isPersonWithDisability: convertEmptyToNullBoolean(
+  //       createInhabitantDto.isPersonWithDisability,
+  //     ),
+  //     isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
+  //     isSingleParent: convertEmptyStringToNull(
+  //       createInhabitantDto.isSingleParent,
+  //     ),
+  //     isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
+  //   };
+
+  //   const newInhabitant = this.inhabitantsRepository.create({
+  //     ...cleanDto,
+  //     household,
+  //   });
+
+  //   if (file) {
+  //     newInhabitant.profilePhoto = file.path;
+  //   }
+  //   console.log(cleanDto);
+  //   console.log(newInhabitant);
+  //   return this.inhabitantsRepository.save(newInhabitant);
+  // }
 
   async createInhabitant(
     createInhabitantDto: CreateInhabitantDto,
@@ -26,13 +95,35 @@ export class InhabitantService {
       throw new NotFoundException('Household not found');
     }
 
-    // Preprocess the DTO to convert empty strings to null
+    const isRepresentative = convertToBoolean(
+      createInhabitantDto.isRepresentative,
+    );
+    const isRegisteredVoter = convertToBoolean(
+      createInhabitantDto.isRegisteredVoter,
+    );
+
     const cleanDto = {
       ...createInhabitantDto,
-      birthday:
-        createInhabitantDto.birthday === ''
-          ? null
-          : createInhabitantDto.birthday,
+      isRepresentative,
+      isRegisteredVoter,
+      gender: convertEmptyStringToNull(createInhabitantDto.gender),
+      birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
+      civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
+      bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
+      expectedLabourDate: convertEmptyStringToNull(
+        createInhabitantDto.expectedLabourDate,
+      ),
+      studentDetails: convertEmptyStringToNull(
+        createInhabitantDto.studentDetails,
+      ),
+      isPersonWithDisability: convertEmptyToNullBoolean(
+        createInhabitantDto.isPersonWithDisability,
+      ),
+      isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
+      isSingleParent: convertEmptyToNullBoolean(
+        createInhabitantDto.isSingleParent,
+      ),
+      isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
     };
 
     const newInhabitant = this.inhabitantsRepository.create({
@@ -43,6 +134,8 @@ export class InhabitantService {
     if (file) {
       newInhabitant.profilePhoto = file.path;
     }
+
+    console.log(newInhabitant);
 
     return this.inhabitantsRepository.save(newInhabitant);
   }
