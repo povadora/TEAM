@@ -12,6 +12,7 @@ import {
   otherInhabitantCivilStatus,
   otherInhabitantBloodType,
   otherStudentDetails,
+  oiHouseholdRole,
 } from '../entities/other-inhabitant.entity';
 
 export class CreateOtherInhabitantDto {
@@ -19,6 +20,10 @@ export class CreateOtherInhabitantDto {
   @IsString()
   oiProfilePhoto: string;
 
+  @IsEnum(oiHouseholdRole)
+  oiHouseholdRole: oiHouseholdRole;
+
+  @IsOptional()
   @IsBoolean()
   isRepresentative: boolean;
 
@@ -48,7 +53,7 @@ export class CreateOtherInhabitantDto {
 
   @IsOptional()
   @IsEnum(otherInhabitantCivilStatus)
-  oiCivilStatus?: otherInhabitantCivilStatus;
+  oiCivilStatus: otherInhabitantCivilStatus;
 
   @IsOptional()
   @IsString()
@@ -62,13 +67,15 @@ export class CreateOtherInhabitantDto {
   @IsString()
   oiHealthRemarks: string;
 
+  @IsOptional()
   @IsBoolean()
   isPersonWithDisability: boolean;
 
   @IsOptional()
   @IsString()
-  oi_DisabilityDetails: string;
+  oiDisabilityDetails: string;
 
+  @IsOptional()
   @IsBoolean()
   isPregnant: boolean;
 
@@ -76,9 +83,11 @@ export class CreateOtherInhabitantDto {
   @IsDate()
   expectedLabourDate: Date;
 
+  @IsOptional()
   @IsBoolean()
   isSingleParent: boolean;
 
+  @IsOptional()
   @IsBoolean()
   isStudent: boolean;
 
@@ -86,6 +95,7 @@ export class CreateOtherInhabitantDto {
   @IsEnum(otherStudentDetails)
   oiStudentDetails: otherStudentDetails;
 
+  @IsOptional()
   @IsBoolean()
   isRegisteredVoter: boolean;
 

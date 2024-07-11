@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
 
 export enum accountRole {
   ADMIN = 'Admin',
@@ -10,6 +10,10 @@ export enum accountRole {
 export class Account {
   @PrimaryGeneratedColumn({ name: 'account_Id' })
   accountId: number;
+
+  @Column({ name: 'account_uuid', type: 'uuid', unique: true })
+  @Generated('uuid')
+  accountUuid: string;
 
   @Column({ name: 'user_name' })
   userName: string;

@@ -26,6 +26,7 @@ function convertEmptyToNullBoolean(value: any): boolean | null {
   }
   return value === 'true' || value === true;
 }
+
 @Injectable()
 export class InhabitantService {
   constructor(
@@ -34,55 +35,6 @@ export class InhabitantService {
     @InjectRepository(Household)
     private readonly householdsRepository: Repository<Household>,
   ) {}
-
-  // async createInhabitant(
-  //   createInhabitantDto: CreateInhabitantDto,
-  //   file: Express.Multer.File,
-  // ): Promise<Inhabitant> {
-  //   const household = await this.householdsRepository.findOne({
-  //     where: { householdUuid: createInhabitantDto.householdUuid },
-  //   });
-  //   if (!household) {
-  //     throw new NotFoundException('Household not found');
-  //   }
-
-  //   const isRepresentative = createInhabitantDto.isRepresentative === 'true';
-  //   const cleanDto = {
-  //     ...createInhabitantDto,
-  //     isRepresentative,
-  //     gender: convertEmptyStringToNull(createInhabitantDto.gender),
-  //     birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
-  //     civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
-  //     bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
-  //     expectedLabourDate: convertEmptyStringToNull(
-  //       createInhabitantDto.expectedLabourDate,
-  //     ),
-  //     studentDetails: convertEmptyStringToNull(
-  //       createInhabitantDto.studentDetails,
-  //     ),
-
-  //     isPersonWithDisability: convertEmptyToNullBoolean(
-  //       createInhabitantDto.isPersonWithDisability,
-  //     ),
-  //     isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
-  //     isSingleParent: convertEmptyStringToNull(
-  //       createInhabitantDto.isSingleParent,
-  //     ),
-  //     isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
-  //   };
-
-  //   const newInhabitant = this.inhabitantsRepository.create({
-  //     ...cleanDto,
-  //     household,
-  //   });
-
-  //   if (file) {
-  //     newInhabitant.profilePhoto = file.path;
-  //   }
-  //   console.log(cleanDto);
-  //   console.log(newInhabitant);
-  //   return this.inhabitantsRepository.save(newInhabitant);
-  // }
 
   async createInhabitant(
     createInhabitantDto: CreateInhabitantDto,
@@ -146,7 +98,7 @@ export class InhabitantService {
 
   async findOneInhabitant(uuid: string): Promise<Inhabitant> {
     const inhabitant = await this.inhabitantsRepository.findOne({
-      where: { InhabitantUuid: uuid },
+      where: { inhabitantUuid: uuid },
       relations: ['household'],
     });
     if (!inhabitant) {
@@ -177,7 +129,7 @@ export class InhabitantService {
     // }
 
     const inhabitant = await this.inhabitantsRepository.findOne({
-      where: { InhabitantUuid: uuid },
+      where: { inhabitantUuid: uuid },
     });
     if (!inhabitant) {
       throw new NotFoundException(`Inhabitant with UUID ${uuid} not found`);
@@ -195,10 +147,12 @@ export class InhabitantService {
     return this.inhabitantsRepository.save(updatedInhabitant);
   }
 
-  async removeInhabitant(uuid: string): Promise<void> {
-    const result = await this.inhabitantsRepository.delete(uuid);
+  async removeInhabitant(inhabitantUuid: string): Promise<void> {
+    const result = await this.inhabitantsRepository.delete({ inhabitantUuid });
     if (result.affected === 0) {
-      throw new NotFoundException(`Inhabitant with ID ${uuid} not found`);
+      throw new NotFoundException(
+        `Inhabitant with ID ${inhabitantUuid} not found`,
+      );
     }
   }
 }

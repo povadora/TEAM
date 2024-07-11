@@ -22,6 +22,16 @@ export class AccountsService {
 
   async createAccount(createAccountDto: CreateAccountDto): Promise<Account> {
     const { userName, password, firstName, lastName, role } = createAccountDto;
+
+    // Add logging to debug
+    console.log('CreateAccountDto:', createAccountDto);
+    console.log('Password:', password);
+
+    // Ensure password is not undefined
+    if (!password) {
+      throw new Error('Password is required');
+    }
+
     const hash = await argon.hash(password);
     const newAccount = this.accountRepository.create({
       userName,
@@ -38,36 +48,34 @@ export class AccountsService {
     return await this.accountRepository.find();
   }
 
-  async findOneRegisteredAccount(accountId: number): Promise<Account> {
-    const account = await this.accountRepository.findOneBy({ accountId });
+  async findOneRegisteredAccount(accountUuid: string): Promise<Account> {
+    const account = await this.accountRepository.findOneBy({ accountUuid });
     if (!account) {
-      throw new NotFoundException(`Account with ID ${accountId} not found`);
+      throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }
     return account;
   }
 
   async updateAccount(
-    id: number,
+    accountUuid: string,
     updateAccountDto: UpdateAccountDto,
   ): Promise<Account> {
     const account = await this.accountRepository.preload({
-      accountId: id,
+      accountUuid: accountUuid,
       ...updateAccountDto,
     });
     if (!account) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
+      throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }
     return this.accountRepository.save(account);
   }
 
-  async removeAccount(accountId: number): Promise<void> {
-    const result = await this.accountRepository.delete(accountId);
+  async removeAccount(accountUuid: string): Promise<void> {
+    const result = await this.accountRepository.delete(accountUuid);
     if (result.affected === 0) {
-      throw new NotFoundException(`Account with ID ${accountId} not found`);
+      throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }
   }
-
-  // dri ang mga uthentication...
 
   async authLogin(
     authLoginDto: AuthLoginDto,

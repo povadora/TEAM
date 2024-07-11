@@ -53,12 +53,12 @@ export class OtherInhabitantsController {
     return this.otherInhabitantsService.findAllOtherInhabitants();
   }
 
-  @Get('other-inhabitant/:id')
-  findOneOtherInhabitant(@Param('id') id: string) {
-    return this.otherInhabitantsService.findOneOtherInhabitant(+id);
+  @Get('/:uuid')
+  findOneOtherInhabitant(@Param('uuid') oiUuid: string) {
+    return this.otherInhabitantsService.findOneOtherInhabitant(oiUuid);
   }
 
-  @Patch('update-other-inhabitant/:id')
+  @Patch('/:uuid')
   @UseInterceptors(
     FileInterceptor('oiProfilePhoto', {
       storage: diskStorage({
@@ -75,19 +75,19 @@ export class OtherInhabitantsController {
     }),
   )
   updateOtherInhabitant(
-    @Param('id') id: string,
+    @Param('uuid') oiUuid: string,
     @Body() updateOtherInhabitantDto: UpdateOtherInhabitantDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this.otherInhabitantsService.updateOtherInhabitant(
-      +id,
+      oiUuid,
       updateOtherInhabitantDto,
       file,
     );
   }
 
-  @Delete('delete-other-inhabitant/:id')
-  removeOtherInhabitant(@Param('id') id: string) {
-    return this.otherInhabitantsService.removeOtherInhabitant(+id);
+  @Delete('delete-other-inhabitant/:uuid')
+  removeOtherInhabitant(@Param('uuid') oiUuid: string) {
+    return this.otherInhabitantsService.removeOtherInhabitant(oiUuid);
   }
 }

@@ -57,7 +57,7 @@ export class Inhabitant {
 
   @Column({ name: 'inhabitant_uuid', type: 'uuid', unique: true })
   @Generated('uuid')
-  InhabitantUuid: string;
+  inhabitantUuid: string;
 
   @ManyToOne(() => Household, (household) => household.inhabitants)
   @JoinColumn({ name: 'household_uuid' })

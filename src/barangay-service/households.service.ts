@@ -6,6 +6,13 @@ import { Household } from 'src/barangay-entities/household.entity';
 import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
 import { Repository } from 'typeorm';
 
+function convertEmptyToNullBoolean(value: any): boolean | null {
+  if (value === '' || value === null || value === undefined) {
+    return null;
+  }
+  return value === 'true' || value === true;
+}
+
 @Injectable()
 export class HouseholdsService {
   constructor(
@@ -50,11 +57,30 @@ export class HouseholdsService {
     createHouseholdDto: CreateHouseholdDto,
     file: Express.Multer.File,
   ): Promise<Household> {
-    const newHousehold = this.householdRepository.create({
+    const cleanDto = {
       ...createHouseholdDto,
+      allowBoarders: convertEmptyToNullBoolean(
+        createHouseholdDto.allowBoarders,
+      ),
+      hasRentalPermit: convertEmptyToNullBoolean(
+        createHouseholdDto.hasRentalPermit,
+      ),
+      hasBackyardGarden: convertEmptyToNullBoolean(
+        createHouseholdDto.hasBackyardGarden,
+      ),
+    };
+    const newHousehold = this.householdRepository.create({
+      ...cleanDto,
     });
     newHousehold.householdPhoto = file.path;
+
+    console.log(newHousehold);
+
     return this.householdRepository.save(newHousehold);
+  }
+
+  async findAllHousehold(): Promise<Household[]> {
+    return await this.householdRepository.find();
   }
 
   async findOneHousehold(householdUuid: string): Promise<Household> {
@@ -66,6 +92,7 @@ export class HouseholdsService {
         `Household with UUID ${householdUuid} not found`,
       );
     }
+
     return household;
   }
 
@@ -111,9 +138,5 @@ export class HouseholdsService {
       where: { household: { householdUuid } },
       relations: ['household'],
     });
-  }
-
-  async findAllHousehold(): Promise<Household[]> {
-    return await this.householdRepository.find();
   }
 }

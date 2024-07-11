@@ -1,5 +1,18 @@
 // oi  means Other Inhabitant
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Generated } from 'typeorm';
+
+export enum oiHouseholdRole {
+  SON = 'Son',
+  DAUGHTER = 'Daughter',
+  FATHER = 'Father',
+  MOTHER = 'Mother',
+  FRIEND = 'Friend',
+  IN_LAW = 'In-law',
+  RELATIVE = 'Relative',
+  WORKER = 'Worker',
+  TENANT = 'Tenant',
+  OTHER = 'Other',
+}
 
 export enum otherInhabitantGender {
   MALE = 'Male',
@@ -35,6 +48,10 @@ export class OtherInhabitant {
   @PrimaryGeneratedColumn({ name: 'ohter_inhabitant_Id' })
   otherInhabitantId: number;
 
+  @Column({ name: 'oi_uuid', type: 'uuid', unique: true })
+  @Generated('uuid')
+  oiUuid: string;
+
   @Column({
     name: 'oi_profile_photo',
     nullable: true,
@@ -42,7 +59,15 @@ export class OtherInhabitant {
   oiProfilePhoto: string;
 
   @Column({
+    name: 'oi_household_role',
+    type: 'enum',
+    enum: oiHouseholdRole,
+  })
+  oiHouseholdRole: oiHouseholdRole;
+
+  @Column({
     name: 'is_representative',
+    type: 'boolean',
     default: false,
   })
   isRepresentative: boolean;
@@ -103,6 +128,8 @@ export class OtherInhabitant {
 
   @Column({
     name: 'is_person_with_disability',
+    type: 'boolean',
+    nullable: true,
     default: false,
   })
   isPersonWithDisability: boolean;
@@ -111,10 +138,12 @@ export class OtherInhabitant {
     name: 'oi_disability_details',
     nullable: true,
   })
-  oi_DisabilityDetails: string;
+  oiDisabilityDetails: string;
 
   @Column({
     name: 'is_pregnant',
+    type: 'boolean',
+    nullable: true,
     default: false,
   })
   isPregnant: boolean;
@@ -128,13 +157,15 @@ export class OtherInhabitant {
 
   @Column({
     name: 'is_single_parent',
-    default: false,
+    type: 'boolean',
+    nullable: true,
   })
   isSingleParent: boolean;
 
   @Column({
     name: 'is_student',
-    default: false,
+    type: 'boolean',
+    nullable: true,
   })
   isStudent: boolean;
 
@@ -148,6 +179,7 @@ export class OtherInhabitant {
 
   @Column({
     name: 'is_registered_voter',
+    type: 'boolean',
     default: false,
   })
   isRegisteredVoter: boolean;

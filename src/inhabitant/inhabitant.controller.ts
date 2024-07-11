@@ -48,7 +48,7 @@ export class InhabitantController {
     return this.inhabitantService.findAllInhabitants();
   }
 
-  @Get('inhabitant/:uuid')
+  @Get('/:uuid')
   findOneInhabitant(@Param('uuid') uuid: string) {
     return this.inhabitantService.findOneInhabitant(uuid);
   }
