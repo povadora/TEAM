@@ -27,37 +27,6 @@ export class HouseholdsService {
     private readonly aggregatedDataGateway: AggregatedDataGateway,
   ) {}
 
-  // private setDefaultValues(
-  //   dto: Partial<CreateHouseholdDto>,
-  // ): Partial<CreateHouseholdDto> {
-  //   return {
-  //     numberOfRooms: dto.numberOfRooms || 0,
-  //     numberOfToilets: dto.numberOfToilets || 0,
-  //     numberOfPets: dto.numberOfPets || 0,
-  //     numberOfTwoWheeledVehicles: dto.numberOfTwoWheeledVehicles || 0,
-  //     numberOfThreeWheeledVehicles: dto.numberOfThreeWheeledVehicles || 0,
-  //     numberOfFourWheeledVehicles: dto.numberOfFourWheeledVehicles || 0,
-  //     ...dto,
-  //   };
-  // }
-
-  // async createHousehold(
-  //   createHouseholdDto: CreateHouseholdDto,
-  //   file: Express.Multer.File,
-  // ): Promise<Household> {
-  //   const householdDtoWithDefaults = this.setDefaultValues(createHouseholdDto);
-
-  //   const newHousehold = this.householdRepository.create(
-  //     householdDtoWithDefaults,
-  //   );
-
-  //   if (file) {
-  //     newHousehold.householdPhoto = file.path;
-  //   }
-
-  //   return this.householdRepository.save(newHousehold);
-  // }
-
   async createHousehold(
     createHouseholdDto: CreateHouseholdDto,
     file: Express.Multer.File,
@@ -88,9 +57,8 @@ export class HouseholdsService {
   }
 
   async findAllHousehold(): Promise<Household[]> {
-    return await this.householdRepository.find();
+    return await this.householdRepository.find({ relations: ['inhabitants'] });
   }
-
   async findOneHousehold(householdUuid: string): Promise<Household> {
     const household = await this.householdRepository.findOne({
       where: { householdUuid },

@@ -1,8 +1,7 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AggregatedController } from 'src/aggregated/aggregated-controller';
-import { AggregatedModule } from 'src/aggregated/aggregated.module';
+import { AggregatedDataGateway } from 'src/aggregated/aggregated-data.gateway';
 import { HouseholdController } from 'src/barangay-controller/housholds.controller';
 import { Household } from 'src/barangay-entities/household.entity';
 import { HouseholdsService } from 'src/barangay-service/households.service';
@@ -15,10 +14,8 @@ import { OtherInhabitant } from 'src/other-inhabitants/entities/other-inhabitant
     MulterModule.register({
       dest: './uploads',
     }),
-    forwardRef(() => AggregatedModule),
   ],
-  controllers: [HouseholdController, AggregatedController],
-  providers: [HouseholdsService],
-  exports: [HouseholdsService],
+  controllers: [HouseholdController],
+  providers: [HouseholdsService, AggregatedDataGateway],
 })
 export class HouseholdModule {}

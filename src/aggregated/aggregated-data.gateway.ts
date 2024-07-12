@@ -1,16 +1,15 @@
 import {
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { HouseholdsService } from 'src/barangay-service/households.service';
-import { forwardRef, Inject } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3000', // The URL of your frontend application
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -21,19 +20,17 @@ export class AggregatedDataGateway
   @WebSocketServer()
   server: Server;
 
-  constructor(
-    @Inject(forwardRef(() => HouseholdsService))
-    private readonly householdsService: HouseholdsService,
-  ) {}
-
-  async handleConnection(client: Socket) {
+  handleConnection(client: Socket) {
     console.log('Client connected:', client.id);
-    const data = await this.householdsService.getAggregatedData();
-    client.emit('initialData', data);
   }
 
   handleDisconnect(client: Socket) {
     console.log('Client disconnected:', client.id);
+  }
+
+  @SubscribeMessage('message')
+  handleMessage(client: Socket, payload: any): string {
+    return 'Hello world!';
   }
 
   sendUpdatedData(event: string, data: any) {
