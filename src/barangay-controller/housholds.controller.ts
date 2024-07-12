@@ -91,4 +91,5 @@ export class HouseholdController {
   async findInhabitants(@Param('uuid') uuid: string): Promise<Inhabitant[]> {
     return this.householdService.findInhabitant(uuid);
   }
+  //////
 }

@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AggregatedDataGateway } from 'src/aggregated/aggregated-data.gateway';
 import { CreateHouseholdDto } from "src/barangay-dto's/create-household.dto";
 import { UpdateHouseholdDto } from "src/barangay-dto's/update-household.dto";
 import { Household } from 'src/barangay-entities/household.entity';
 import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
+import { OtherInhabitant } from 'src/other-inhabitants/entities/other-inhabitant.entity';
 import { Repository } from 'typeorm';
 
 function convertEmptyToNullBoolean(value: any): boolean | null {
@@ -20,6 +22,9 @@ export class HouseholdsService {
     private readonly householdRepository: Repository<Household>,
     @InjectRepository(Inhabitant)
     private readonly inhabitantRepository: Repository<Inhabitant>,
+    @InjectRepository(OtherInhabitant)
+    private readonly otherInhabitantRepository: Repository<OtherInhabitant>,
+    private readonly aggregatedDataGateway: AggregatedDataGateway,
   ) {}
 
   // private setDefaultValues(
@@ -74,9 +79,12 @@ export class HouseholdsService {
     });
     newHousehold.householdPhoto = file.path;
 
-    console.log(newHousehold);
-
-    return this.householdRepository.save(newHousehold);
+    const savedHousehold = await this.householdRepository.save(newHousehold);
+    this.aggregatedDataGateway.sendUpdatedData('householdCreated', {
+      ...savedHousehold,
+      inhabitants: savedHousehold.inhabitants || [],
+    });
+    return savedHousehold;
   }
 
   async findAllHousehold(): Promise<Household[]> {
@@ -121,7 +129,13 @@ export class HouseholdsService {
       household.householdPhoto = file.path;
     }
 
-    return this.householdRepository.save(household);
+    const updatedHousehold = await this.householdRepository.save(household);
+    this.aggregatedDataGateway.sendUpdatedData(
+      'householdUpdated',
+      updatedHousehold,
+    );
+
+    return updatedHousehold;
   }
 
   async removeHousehold(householdUuid: string): Promise<void> {
@@ -131,6 +145,9 @@ export class HouseholdsService {
         `Household with UUID ${householdUuid} not found`,
       );
     }
+    this.aggregatedDataGateway.sendUpdatedData('householdDeleted', {
+      householdUuid,
+    });
   }
 
   async findInhabitant(householdUuid: string): Promise<Inhabitant[]> {
@@ -138,5 +155,23 @@ export class HouseholdsService {
       where: { household: { householdUuid } },
       relations: ['household'],
     });
+  }
+
+  //////
+
+  async getAggregatedData() {
+    const totalHouseholds = await this.householdRepository.count();
+    const totalInhabitants = await this.inhabitantRepository.count();
+    const totalVoters = await this.inhabitantRepository.count({
+      where: { isRegisteredVoter: true },
+    });
+    const totalNonVoters = totalInhabitants - totalVoters;
+
+    return {
+      totalHouseholds,
+      totalInhabitants,
+      totalVoters,
+      totalNonVoters,
+    };
   }
 }

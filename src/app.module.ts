@@ -11,6 +11,7 @@ import { InhabitantModule } from './inhabitant/inhabitant.module';
 import { Inhabitant } from './inhabitant/entities/inhabitant.entity';
 import { OtherInhabitantsModule } from './other-inhabitants/other-inhabitants.module';
 import { OtherInhabitant } from './other-inhabitants/entities/other-inhabitant.entity';
+import { AggregatedModule } from './aggregated/aggregated.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { OtherInhabitant } from './other-inhabitants/entities/other-inhabitant.e
     HouseholdModule,
     InhabitantModule,
     OtherInhabitantsModule,
+    AggregatedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

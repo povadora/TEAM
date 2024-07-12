@@ -5,6 +5,7 @@ import { Inhabitant } from './entities/inhabitant.entity';
 import { CreateInhabitantDto } from './dto/create-inhabitant.dto';
 import { UpdateInhabitantDto } from './dto/update-inhabitant.dto';
 import { Household } from 'src/barangay-entities/household.entity';
+import { AggregatedDataGateway } from 'src/aggregated/aggregated-data.gateway';
 
 function convertToBoolean(value: any): boolean {
   if (typeof value === 'boolean') {
@@ -34,6 +35,7 @@ export class InhabitantService {
     private readonly inhabitantsRepository: Repository<Inhabitant>,
     @InjectRepository(Household)
     private readonly householdsRepository: Repository<Household>,
+    private readonly aggregatedDataGateway: AggregatedDataGateway,
   ) {}
 
   async createInhabitant(
@@ -87,9 +89,16 @@ export class InhabitantService {
       newInhabitant.profilePhoto = file.path;
     }
 
-    console.log(newInhabitant);
+    const savedInhabitant =
+      await this.inhabitantsRepository.save(newInhabitant);
 
-    return this.inhabitantsRepository.save(newInhabitant);
+    // Emit event
+    this.aggregatedDataGateway.sendUpdatedData(
+      'inhabitantCreated',
+      savedInhabitant,
+    );
+
+    return savedInhabitant;
   }
 
   findAllInhabitants(): Promise<Inhabitant[]> {
@@ -112,22 +121,6 @@ export class InhabitantService {
     updateInhabitantDto: UpdateInhabitantDto,
     file?: Express.Multer.File,
   ): Promise<Inhabitant> {
-    //   const inhabitant = await this.inhabitantsRepository.preload({
-    //     inhabitantId: uuid,
-    //     ...updateInhabitantDto,
-    //   });
-
-    //   if (!inhabitant) {
-    //     throw new NotFoundException(`Inhabitant with ID ${uuid} not found`);
-    //   }
-
-    //   if (file) {
-    //     inhabitant.profilePhoto = file.path;
-    //   }
-
-    //   return this.inhabitantsRepository.save(inhabitant);
-    // }
-
     const inhabitant = await this.inhabitantsRepository.findOne({
       where: { inhabitantUuid: uuid },
     });
@@ -144,7 +137,14 @@ export class InhabitantService {
       updatedInhabitant.profilePhoto = file.path;
     }
 
-    return this.inhabitantsRepository.save(updatedInhabitant);
+    const savedInhabitant =
+      await this.inhabitantsRepository.save(updatedInhabitant);
+    this.aggregatedDataGateway.sendUpdatedData(
+      'inhabitantUpdated',
+      savedInhabitant,
+    );
+
+    return savedInhabitant;
   }
 
   async removeInhabitant(inhabitantUuid: string): Promise<void> {
@@ -154,5 +154,8 @@ export class InhabitantService {
         `Inhabitant with ID ${inhabitantUuid} not found`,
       );
     }
+    this.aggregatedDataGateway.sendUpdatedData('inhabitantDeleted', {
+      inhabitantUuid,
+    });
   }
 }

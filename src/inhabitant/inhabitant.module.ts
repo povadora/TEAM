@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Inhabitant } from './entities/inhabitant.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { Household } from 'src/barangay-entities/household.entity';
+import { AggregatedDataGateway } from 'src/aggregated/aggregated-data.gateway';
+import { AggregatedModule } from 'src/aggregated/aggregated.module';
 
 @Module({
   imports: [
@@ -12,8 +14,9 @@ import { Household } from 'src/barangay-entities/household.entity';
     MulterModule.register({
       dest: './uploads',
     }),
+    AggregatedModule,
   ],
   controllers: [InhabitantController],
-  providers: [InhabitantService],
+  providers: [InhabitantService, AggregatedDataGateway],
 })
 export class InhabitantModule {}
