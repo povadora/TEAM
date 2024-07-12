@@ -1,5 +1,11 @@
 // oi  means Other Inhabitant
-import { Entity, PrimaryGeneratedColumn, Column, Generated } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Generated,
+  CreateDateColumn,
+} from 'typeorm';
 
 export enum oiHouseholdRole {
   SON = 'Son',
@@ -202,4 +208,7 @@ export class OtherInhabitant {
     nullable: true,
   })
   currentOccupationPlace: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

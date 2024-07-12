@@ -1,4 +1,10 @@
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Generated,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum accountRole {
   ADMIN = 'Admin',
@@ -29,4 +35,7 @@ export class Account {
 
   @Column({ type: 'enum', enum: accountRole, default: accountRole.INTERN })
   role: accountRole;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

@@ -6,6 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
   Generated,
+  CreateDateColumn,
 } from 'typeorm';
 
 export enum householdRole {
@@ -60,7 +61,10 @@ export class Inhabitant {
   inhabitantUuid: string;
 
   @ManyToOne(() => Household, (household) => household.inhabitants)
-  @JoinColumn({ name: 'household_uuid' })
+  @JoinColumn({
+    name: 'household_uuid',
+    // referencedColumnName: 'household_uuid',
+  })
   household: Household;
 
   @Column({
@@ -212,4 +216,7 @@ export class Inhabitant {
     nullable: true,
   })
   currentOccupationPlace: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

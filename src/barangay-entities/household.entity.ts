@@ -5,6 +5,7 @@ import {
   Column,
   OneToMany,
   Generated,
+  CreateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -133,6 +134,9 @@ export class Household {
     nullable: true,
   })
   numberOfFourWheeledVehicles: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @OneToMany(() => Inhabitant, (inhabitant) => inhabitant.household)
   inhabitants: Inhabitant[];
