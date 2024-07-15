@@ -67,17 +67,17 @@ export class Household {
 
   @Column({
     name: 'number_of_rooms',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfRooms: number;
+  numberOfRooms: string;
 
   @Column({
     name: 'number_of_toilets',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfToilets: number;
+  numberOfToilets: string;
 
   @Column({
     name: 'allow_boarders',
@@ -109,31 +109,31 @@ export class Household {
 
   @Column({
     name: 'number_of_pets',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfPets: number;
+  numberOfPets: string;
 
   @Column({
     name: 'number_of_two_wheeled_vehicles',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfTwoWheeledVehicles: number;
+  numberOfTwoWheeledVehicles: string;
 
   @Column({
     name: 'number_of_three_wheeled_vehicles',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfThreeWheeledVehicles: number;
+  numberOfThreeWheeledVehicles: string;
 
   @Column({
     name: 'number_of_four_wheeled_vehicles',
-    type: 'int',
+    type: 'varchar',
     nullable: true,
   })
-  numberOfFourWheeledVehicles: number;
+  numberOfFourWheeledVehicles: string;
 
   @CreateDateColumn()
   createdAt: Date;

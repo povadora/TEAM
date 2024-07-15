@@ -27,7 +27,7 @@ export class HouseholdsService {
 
   async createHousehold(
     createHouseholdDto: CreateHouseholdDto,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ): Promise<Household> {
     const cleanDto = {
       ...createHouseholdDto,
@@ -47,6 +47,37 @@ export class HouseholdsService {
     newHousehold.householdPhoto = file.path;
     return this.householdRepository.save(newHousehold);
   }
+
+  // async createHousehold(
+  //   createHouseholdDto: CreateHouseholdDto,
+  //   file?: Express.Multer.File, // Optional file parameter
+  // ): Promise<Household> {
+  //   const cleanDto = {
+  //     ...createHouseholdDto,
+  //     allowBoarders: convertEmptyToNullBoolean(
+  //       createHouseholdDto.allowBoarders,
+  //     ),
+  //     hasRentalPermit: convertEmptyToNullBoolean(
+  //       createHouseholdDto.hasRentalPermit,
+  //     ),
+  //     hasBackyardGarden: convertEmptyToNullBoolean(
+  //       createHouseholdDto.hasBackyardGarden,
+  //     ),
+  //   };
+
+  //   const newHousehold = this.householdRepository.create({
+  //     ...cleanDto,
+  //   });
+
+  //   if (file) {
+  //     newHousehold.householdPhoto = file.path;
+  //   }
+  //   // else {
+  //   //   newHousehold.householdPhoto = null; // or a default value
+  //   // }
+
+  //   return this.householdRepository.save(newHousehold);
+  // }
 
   async findAllHousehold(): Promise<Household[]> {
     return await this.householdRepository.find({ relations: ['inhabitants'] });
@@ -79,12 +110,10 @@ export class HouseholdsService {
       );
     }
 
-    // Update fields if provided
     if (updateHouseholdDto) {
       Object.assign(household, updateHouseholdDto);
     }
 
-    // Update photo if new file uploaded
     if (file) {
       household.householdPhoto = file.path;
     }
@@ -107,22 +136,4 @@ export class HouseholdsService {
       relations: ['household'],
     });
   }
-
-  //////
-
-  // async getAggregatedData() {
-  //   const totalHouseholds = await this.householdRepository.count();
-  //   const totalInhabitants = await this.inhabitantRepository.count();
-  //   const totalVoters = await this.inhabitantRepository.count({
-  //     where: { isRegisteredVoter: true },
-  //   });
-  //   const totalNonVoters = totalInhabitants - totalVoters;
-
-  //   return {
-  //     totalHouseholds,
-  //     totalInhabitants,
-  //     totalVoters,
-  //     totalNonVoters,
-  //   };
-  // }
 }

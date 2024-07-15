@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateHouseholdDto {
   @IsOptional()
@@ -53,12 +47,12 @@ export class CreateHouseholdDto {
   structureMaterials: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfRooms: number | null;
+  @IsString()
+  numberOfRooms: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfToilets: number | null;
+  @IsString()
+  numberOfToilets: string;
 
   @IsOptional()
   @IsBoolean()
@@ -77,18 +71,18 @@ export class CreateHouseholdDto {
   otherIncomeSource: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfPets: number | null;
+  @IsString()
+  numberOfPets: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfTwoWheeledVehicles: number | null;
+  @IsString()
+  numberOfTwoWheeledVehicles: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfThreeWheeledVehicles: number | null;
+  @IsString()
+  numberOfThreeWheeledVehicles: string;
 
   @IsOptional()
-  @IsInt()
-  numberOfFourWheeledVehicles: number | null;
+  @IsString()
+  numberOfFourWheeledVehicles: string;
 }
