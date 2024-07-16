@@ -41,47 +41,23 @@ export class HouseholdsService {
         createHouseholdDto.hasBackyardGarden,
       ),
     };
+
     const newHousehold = this.householdRepository.create({
       ...cleanDto,
     });
-    newHousehold.householdPhoto = file.path;
+
+    if (file) {
+      newHousehold.householdPhoto = file.path;
+    } else {
+      newHousehold.householdPhoto = null; // or a default value
+    }
     return this.householdRepository.save(newHousehold);
   }
-
-  // async createHousehold(
-  //   createHouseholdDto: CreateHouseholdDto,
-  //   file?: Express.Multer.File, // Optional file parameter
-  // ): Promise<Household> {
-  //   const cleanDto = {
-  //     ...createHouseholdDto,
-  //     allowBoarders: convertEmptyToNullBoolean(
-  //       createHouseholdDto.allowBoarders,
-  //     ),
-  //     hasRentalPermit: convertEmptyToNullBoolean(
-  //       createHouseholdDto.hasRentalPermit,
-  //     ),
-  //     hasBackyardGarden: convertEmptyToNullBoolean(
-  //       createHouseholdDto.hasBackyardGarden,
-  //     ),
-  //   };
-
-  //   const newHousehold = this.householdRepository.create({
-  //     ...cleanDto,
-  //   });
-
-  //   if (file) {
-  //     newHousehold.householdPhoto = file.path;
-  //   }
-  //   // else {
-  //   //   newHousehold.householdPhoto = null; // or a default value
-  //   // }
-
-  //   return this.householdRepository.save(newHousehold);
-  // }
 
   async findAllHousehold(): Promise<Household[]> {
     return await this.householdRepository.find({ relations: ['inhabitants'] });
   }
+
   async findOneHousehold(householdUuid: string): Promise<Household> {
     const household = await this.householdRepository.findOne({
       where: { householdUuid },
@@ -94,6 +70,34 @@ export class HouseholdsService {
 
     return household;
   }
+
+  // async updateHousehold(
+  //   householdUuid: string,
+  //   updateHouseholdDto: UpdateHouseholdDto,
+  //   file?: Express.Multer.File,
+  // ): Promise<Household> {
+  //   const household = await this.householdRepository.findOne({
+  //     where: { householdUuid },
+  //   });
+
+  //   if (!household) {
+  //     throw new NotFoundException(
+  //       `Household with UUID ${householdUuid} not found`,
+  //     );
+  //   }
+
+  //   if (updateHouseholdDto) {
+  //     Object.assign(household, updateHouseholdDto);
+  //   }
+
+  //   if (file) {
+  //     household.householdPhoto = file.path;
+  //   } else {
+  //     household.householdPhoto = null; // or a default value
+  //   }
+
+  //   return this.householdRepository.save(household);
+  // }
 
   async updateHousehold(
     householdUuid: string,
@@ -110,15 +114,39 @@ export class HouseholdsService {
       );
     }
 
-    if (updateHouseholdDto) {
-      Object.assign(household, updateHouseholdDto);
-    }
+    const cleanDto = {
+      ...updateHouseholdDto,
+      allowBoarders: convertEmptyToNullBoolean(
+        updateHouseholdDto.allowBoarders,
+      ),
+      hasRentalPermit: convertEmptyToNullBoolean(
+        updateHouseholdDto.hasRentalPermit,
+      ),
+      hasBackyardGarden: convertEmptyToNullBoolean(
+        updateHouseholdDto.hasBackyardGarden,
+      ),
+    };
+
+    console.log('Updating household:', householdUuid);
+    console.log('Update data:', cleanDto);
+
+    Object.keys(cleanDto).forEach((key) => {
+      if (cleanDto[key] !== undefined) {
+        household[key] = cleanDto[key];
+      }
+    });
 
     if (file) {
       household.householdPhoto = file.path;
     }
 
-    return this.householdRepository.save(household);
+    try {
+      await this.householdRepository.update({ householdUuid }, household);
+      return this.householdRepository.findOne({ where: { householdUuid } });
+    } catch (error) {
+      console.error('Error updating household:', error);
+      throw error;
+    }
   }
 
   async removeHousehold(householdUuid: string): Promise<void> {

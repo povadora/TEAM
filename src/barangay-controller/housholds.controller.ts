@@ -44,29 +44,6 @@ export class HouseholdController {
     return this.householdService.createHousehold(createHouseholdDto, file);
   }
 
-  // @Post('create-household')
-  // @UseInterceptors(
-  //   FileInterceptor('householdPhoto', {
-  //     storage: diskStorage({
-  //       destination: './uploads',
-  //       filename: (req, file, cb) => {
-  //         const uniqueSuffix =
-  //           Date.now() + '-' + Math.round(Math.random() * 1e9);
-  //         cb(
-  //           null,
-  //           `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`,
-  //         );
-  //       },
-  //     }),
-  //   }),
-  // )
-  // createHousehold(
-  //   @Body() createHouseholdDto: CreateHouseholdDto,
-  //   @UploadedFile() file?: Express.Multer.File, // Optional file parameter
-  // ) {
-  //   return this.householdService.createHousehold(createHouseholdDto, file);
-  // }
-
   @Get('all-household')
   findAllHousehold() {
     return this.householdService.findAllHousehold();
@@ -96,7 +73,7 @@ export class HouseholdController {
   updateHousehold(
     @Param('uuid') uuid: string,
     @Body() updateHouseholdDto: UpdateHouseholdDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.householdService.updateHousehold(
       uuid,
@@ -114,5 +91,4 @@ export class HouseholdController {
   async findInhabitants(@Param('uuid') uuid: string): Promise<Inhabitant[]> {
     return this.householdService.findInhabitant(uuid);
   }
-  //////
 }
