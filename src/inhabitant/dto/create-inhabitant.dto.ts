@@ -12,7 +12,7 @@ import {
   inhabitantCivilStatus,
   inhabitantGender,
   studentDetails,
-} from '../entities/inhabitant.entity';
+} from '../enum/inhabitant.enum';
 
 export class CreateInhabitantDto {
   @IsString()
@@ -34,14 +34,14 @@ export class CreateInhabitantDto {
 
   @IsOptional()
   @IsString()
-  middleName: string;
+  middleName: string | null;
 
   @IsString()
   lastName: string;
 
   @IsOptional()
   @IsEnum(inhabitantGender)
-  gender: inhabitantGender;
+  gender: inhabitantGender | null;
 
   @IsOptional()
   @IsDateString({})
@@ -49,35 +49,35 @@ export class CreateInhabitantDto {
 
   @IsOptional()
   @IsEmail()
-  email: string;
+  email: string | null;
 
   @IsOptional()
   @IsEnum(inhabitantCivilStatus)
-  civilStatus: inhabitantCivilStatus;
+  civilStatus: inhabitantCivilStatus | null;
 
   @IsOptional()
   @IsString()
-  mobileNumber: string;
+  mobileNumber: string | null;
 
   @IsOptional()
   @IsEnum(inhabitantBloodType)
-  bloodType: inhabitantBloodType;
+  bloodType: inhabitantBloodType | null;
 
   @IsOptional()
   @IsString()
-  healthRemarks: string;
+  healthRemarks: string | null;
 
   @IsOptional()
   @IsBoolean()
-  isPersonWithDisability: boolean;
+  isPersonWithDisability: boolean | null;
 
   @IsOptional()
   @IsString()
-  disabilityDetails: string;
+  disabilityDetails: string | null;
 
   @IsOptional()
   @IsBoolean()
-  isPregnant: boolean;
+  isPregnant: boolean | null;
 
   @IsOptional()
   @IsDateString({})
@@ -85,29 +85,29 @@ export class CreateInhabitantDto {
 
   @IsOptional()
   @IsBoolean()
-  isSingleParent: boolean;
+  isSingleParent: boolean | null;
 
   @IsOptional()
   @IsBoolean()
-  isStudent: boolean;
+  isStudent: boolean | null;
 
   @IsOptional()
   @IsEnum(studentDetails)
-  studentDetails: studentDetails;
+  studentDetails: studentDetails | null;
 
   @IsOptional()
   @IsBoolean()
-  isRegisteredVoter: boolean;
+  isRegisteredVoter: boolean | null;
 
   @IsOptional()
   @IsString()
-  placeOfRegistration: string;
+  placeOfRegistration: string | null;
 
   @IsOptional()
   @IsString()
-  occupation: string;
+  occupation: string | null;
 
   @IsOptional()
   @IsString()
-  currentOccupationPlace: string;
+  currentOccupationPlace: string | null;
 }

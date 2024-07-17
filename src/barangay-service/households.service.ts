@@ -5,14 +5,8 @@ import { UpdateHouseholdDto } from "src/barangay-dto's/update-household.dto";
 import { Household } from 'src/barangay-entities/household.entity';
 import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
 import { OtherInhabitant } from 'src/other-inhabitants/entities/other-inhabitant.entity';
+import { convertEmptyToNullBoolean } from 'src/utils/helper';
 import { Repository } from 'typeorm';
-
-function convertEmptyToNullBoolean(value: any): boolean | null {
-  if (value === '' || value === null || value === undefined) {
-    return null;
-  }
-  return value === 'true' || value === true;
-}
 
 @Injectable()
 export class HouseholdsService {
@@ -49,7 +43,7 @@ export class HouseholdsService {
     if (file) {
       newHousehold.householdPhoto = file.path;
     } else {
-      newHousehold.householdPhoto = null; // or a default value
+      newHousehold.householdPhoto = null;
     }
     return this.householdRepository.save(newHousehold);
   }
@@ -70,34 +64,6 @@ export class HouseholdsService {
 
     return household;
   }
-
-  // async updateHousehold(
-  //   householdUuid: string,
-  //   updateHouseholdDto: UpdateHouseholdDto,
-  //   file?: Express.Multer.File,
-  // ): Promise<Household> {
-  //   const household = await this.householdRepository.findOne({
-  //     where: { householdUuid },
-  //   });
-
-  //   if (!household) {
-  //     throw new NotFoundException(
-  //       `Household with UUID ${householdUuid} not found`,
-  //     );
-  //   }
-
-  //   if (updateHouseholdDto) {
-  //     Object.assign(household, updateHouseholdDto);
-  //   }
-
-  //   if (file) {
-  //     household.householdPhoto = file.path;
-  //   } else {
-  //     household.householdPhoto = null; // or a default value
-  //   }
-
-  //   return this.householdRepository.save(household);
-  // }
 
   async updateHousehold(
     householdUuid: string,

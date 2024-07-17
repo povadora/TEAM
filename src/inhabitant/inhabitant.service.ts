@@ -5,27 +5,11 @@ import { Inhabitant } from './entities/inhabitant.entity';
 import { CreateInhabitantDto } from './dto/create-inhabitant.dto';
 import { UpdateInhabitantDto } from './dto/update-inhabitant.dto';
 import { Household } from 'src/barangay-entities/household.entity';
-
-function convertToBoolean(value: any): boolean {
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  if (typeof value === 'string') {
-    return value.toLowerCase() === 'true';
-  }
-  return false;
-}
-
-const convertEmptyStringToNull = (value: any) => {
-  return value === '' ? null : value;
-};
-
-function convertEmptyToNullBoolean(value: any): boolean | null {
-  if (value === '' || value === null || value === undefined) {
-    return null;
-  }
-  return value === 'true' || value === true;
-}
+import {
+  convertEmptyStringToNull,
+  convertEmptyToNullBoolean,
+  convertToBoolean,
+} from 'src/utils/helper';
 
 @Injectable()
 export class InhabitantService {
@@ -38,7 +22,7 @@ export class InhabitantService {
 
   async createInhabitant(
     createInhabitantDto: CreateInhabitantDto,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ): Promise<Inhabitant> {
     const household = await this.householdsRepository.findOne({
       where: { householdUuid: createInhabitantDto.householdUuid },
@@ -58,6 +42,7 @@ export class InhabitantService {
       ...createInhabitantDto,
       isRepresentative,
       isRegisteredVoter,
+
       gender: convertEmptyStringToNull(createInhabitantDto.gender),
       birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
       civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
@@ -85,6 +70,8 @@ export class InhabitantService {
 
     if (file) {
       newInhabitant.profilePhoto = file.path;
+    } else {
+      newInhabitant.profilePhoto = null;
     }
     return this.inhabitantsRepository.save(newInhabitant);
   }
@@ -123,8 +110,9 @@ export class InhabitantService {
 
     if (file) {
       updatedInhabitant.profilePhoto = file.path;
+    } else {
+      updatedInhabitant.profilePhoto = null;
     }
-
     return this.inhabitantsRepository.save(updatedInhabitant);
   }
 

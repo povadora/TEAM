@@ -8,77 +8,43 @@ import {
   Generated,
   CreateDateColumn,
 } from 'typeorm';
-
-export enum householdRole {
-  SON = 'Son',
-  DAUGHTER = 'Daughter',
-  FATHER = 'Father',
-  MOTHER = 'Mother',
-  FRIEND = 'Friend',
-  IN_LAW = 'In-law',
-  RELATIVE = 'Relative',
-  WORKER = 'Worker',
-  TENANT = 'Tenant',
-  OTHER = 'Other',
-}
-
-export enum inhabitantGender {
-  MALE = 'Male',
-  FEMALE = 'Female',
-  NON_BINARY = 'Non-binary',
-  PREFER_NOT_TO_SAY = 'Prefer not to say',
-}
-
-export enum inhabitantCivilStatus {
-  SINGLE = 'Single',
-  MARRIED = 'Married',
-  SEPARATED = 'Separated',
-  WIDOW = 'Widow',
-}
-
-export enum inhabitantBloodType {
-  B_NEGATIVE = 'B RhD negative (B-)',
-  O_POSITIVE = 'O RhD positive (O+)',
-  O_NEGATIVE = 'O RhD negative (O-)',
-  AB_POSITIVE = 'AB RhD positive (AB+)',
-  AB_NEGATIVE = 'AB RhD negative (AB-)',
-}
-
-export enum studentDetails {
-  ELEMENTARY = 'Elementary',
-  HIGHSCHOOL = 'Highschool',
-  SENIOR_HIGHSCHOOL = 'Senior Highschool',
-  COLLEGE = 'College',
-}
+import {
+  householdRole,
+  inhabitantBloodType,
+  inhabitantCivilStatus,
+  inhabitantGender,
+  studentDetails,
+} from '../enum/inhabitant.enum';
 
 @Entity()
 export class Inhabitant {
-  @PrimaryGeneratedColumn({ name: 'inhabitant_Id' })
+  @PrimaryGeneratedColumn({
+    name: 'inhabitant_Id',
+  })
   inhabitantId: number;
 
-  @Column({ name: 'inhabitant_uuid', type: 'uuid', unique: true })
+  @Column({
+    name: 'inhabitant_uuid',
+    type: 'uuid',
+    unique: true,
+  })
   @Generated('uuid')
   inhabitantUuid: string;
 
-  @ManyToOne(() => Household, (household) => household.inhabitants)
-  @JoinColumn({
-    name: 'household_uuid',
-    // referencedColumnName: 'household_uuid',
-  })
-  household: Household;
-
   @Column({
     name: 'profile_photo',
+    type: 'varchar',
     nullable: true,
   })
-  profilePhoto: string;
+  profilePhoto: string | null;
 
   @Column({
     name: 'household_role',
     type: 'enum',
     enum: householdRole,
+    nullable: true,
   })
-  householdRole: householdRole;
+  householdRole: householdRole | null;
 
   @Column({
     name: 'is_representative',
@@ -87,16 +53,23 @@ export class Inhabitant {
   })
   isRepresentative: boolean;
 
-  @Column({ name: 'first_name' })
+  @Column({
+    name: 'first_name',
+    type: 'varchar',
+  })
   firstName: string;
 
   @Column({
     name: 'middle_name',
+    type: 'varchar',
     nullable: true,
   })
-  middleName: string;
+  middleName: string | null;
 
-  @Column({ name: 'last_name' })
+  @Column({
+    name: 'last_name',
+    type: 'varchar',
+  })
   lastName: string;
 
   @Column({
@@ -105,7 +78,7 @@ export class Inhabitant {
     enum: inhabitantGender,
     nullable: true,
   })
-  gender: inhabitantGender;
+  gender: inhabitantGender | null;
 
   @Column({
     type: 'date',
@@ -113,8 +86,11 @@ export class Inhabitant {
   })
   birthday: Date | null;
 
-  @Column({ nullable: true })
-  email: string;
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  email: string | null;
 
   @Column({
     name: 'inhabitant_civil_status',
@@ -122,13 +98,14 @@ export class Inhabitant {
     enum: inhabitantCivilStatus,
     nullable: true,
   })
-  civilStatus: inhabitantCivilStatus;
+  civilStatus: inhabitantCivilStatus | null;
 
   @Column({
     name: 'mobile_number',
+    type: 'varchar',
     nullable: true,
   })
-  mobileNumber: string;
+  mobileNumber: string | null;
 
   @Column({
     name: 'blood_type',
@@ -136,52 +113,56 @@ export class Inhabitant {
     enum: inhabitantBloodType,
     nullable: true,
   })
-  bloodType: inhabitantBloodType;
+  bloodType: inhabitantBloodType | null;
 
   @Column({
     name: 'health_remarks',
+    type: 'text',
     nullable: true,
   })
-  healthRemarks: string;
+  healthRemarks: string | null;
 
   @Column({
     name: 'is_person_with_disability',
+    type: 'boolean',
     nullable: true,
   })
-  isPersonWithDisability: boolean;
+  isPersonWithDisability: boolean | null;
 
   @Column({
     name: 'disability_details',
+    type: 'varchar',
     nullable: true,
   })
-  disabilityDetails: string;
+  disabilityDetails: string | null;
 
   @Column({
     name: 'is_pregnant',
+    type: 'boolean',
     nullable: true,
   })
-  isPregnant: boolean;
+  isPregnant: boolean | null;
 
   @Column({
     name: 'expected_labour_date',
     type: 'date',
     nullable: true,
   })
-  expectedLabourDate: Date;
+  expectedLabourDate: Date | null;
 
   @Column({
     name: 'is_single_parent',
-    default: false,
+    type: 'boolean',
     nullable: true,
   })
-  isSingleParent: boolean;
+  isSingleParent: boolean | null;
 
   @Column({
     name: 'is_student',
-    default: false,
+    type: 'boolean',
     nullable: true,
   })
-  isStudent: boolean;
+  isStudent: boolean | null;
 
   @Column({
     name: 'student_details',
@@ -189,7 +170,7 @@ export class Inhabitant {
     enum: studentDetails,
     nullable: true,
   })
-  studentDetails: studentDetails;
+  studentDetails: studentDetails | null;
 
   @Column({
     name: 'is_registered_voter',
@@ -203,20 +184,29 @@ export class Inhabitant {
     type: 'text',
     nullable: true,
   })
-  placeOfRegistration: string;
+  placeOfRegistration: string | null;
 
   @Column({
     name: 'occupation',
+    type: 'varchar',
     nullable: true,
   })
-  occupation: string;
+  occupation: string | null;
 
   @Column({
     name: 'current_occupation_place',
+    type: 'varchar',
     nullable: true,
   })
-  currentOccupationPlace: string;
+  currentOccupationPlace: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToOne(() => Household, (household) => household.inhabitants)
+  @JoinColumn({
+    name: 'household_uuid',
+    // referencedColumnName: 'household_uuid',
+  })
+  household: Household;
 }

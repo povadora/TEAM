@@ -3,7 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class CreateHouseholdDto {
   @IsOptional()
   @IsString()
-  householdPhoto: string;
+  householdPhoto: string | null;
 
   @IsNotEmpty()
   @IsString()
@@ -15,23 +15,23 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsString()
-  streetName: string;
+  streetName: string | null;
 
   @IsOptional()
   @IsString()
-  subdivision: string;
+  subdivision: string | null;
 
   @IsOptional()
   @IsString()
-  zone: string;
+  zone: string | null;
 
   @IsOptional()
   @IsString()
-  sitio: string;
+  sitio: string | null;
 
   @IsOptional()
   @IsString()
-  purok: string;
+  purok: string | null;
 
   @IsString()
   barangay: string;
@@ -44,15 +44,15 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsString()
-  structureMaterials: string;
+  structureMaterials: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfRooms: string;
+  numberOfRooms: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfToilets: string;
+  numberOfToilets: string | null;
 
   @IsOptional()
   @IsBoolean()
@@ -68,21 +68,21 @@ export class CreateHouseholdDto {
 
   @IsOptional()
   @IsString()
-  otherIncomeSource: string;
+  otherIncomeSource: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfPets: string;
+  numberOfPets: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfTwoWheeledVehicles: string;
+  numberOfTwoWheeledVehicles: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfThreeWheeledVehicles: string;
+  numberOfThreeWheeledVehicles: string | null;
 
   @IsOptional()
   @IsString()
-  numberOfFourWheeledVehicles: string;
+  numberOfFourWheeledVehicles: string | null;
 }
