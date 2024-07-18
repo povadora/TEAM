@@ -21,11 +21,12 @@ export class InhabitantService {
   ) {}
 
   async createInhabitant(
+    householdUuid: string,
     createInhabitantDto: CreateInhabitantDto,
     file?: Express.Multer.File,
   ): Promise<Inhabitant> {
     const household = await this.householdsRepository.findOne({
-      where: { householdUuid: createInhabitantDto.householdUuid },
+      where: { householdUuid: householdUuid },
     });
     if (!household) {
       throw new NotFoundException('Household not found');

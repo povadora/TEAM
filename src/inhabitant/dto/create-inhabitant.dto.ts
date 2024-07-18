@@ -15,9 +15,6 @@ import {
 } from '../enum/inhabitant.enum';
 
 export class CreateInhabitantDto {
-  @IsString()
-  householdUuid: string;
-
   @IsOptional()
   @IsString()
   profilePhoto: string;

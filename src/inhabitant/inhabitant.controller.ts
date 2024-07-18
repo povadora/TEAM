@@ -20,7 +20,7 @@ import { InhabitantService } from './inhabitant.service';
 export class InhabitantController {
   constructor(private readonly inhabitantService: InhabitantService) {}
 
-  @Post('create-inhabitant')
+  @Post('create-inhabitant/:householdUuid')
   @UseInterceptors(
     FileInterceptor('profilePhoto', {
       storage: diskStorage({
@@ -37,10 +37,15 @@ export class InhabitantController {
     }),
   )
   createInhabitant(
+    @Param('householdUuid') householdUuid: string,
     @Body() createInhabitantDto: CreateInhabitantDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.inhabitantService.createInhabitant(createInhabitantDto, file);
+    return this.inhabitantService.createInhabitant(
+      householdUuid,
+      createInhabitantDto,
+      file,
+    );
   }
 
   @Get('all-inhabitants')

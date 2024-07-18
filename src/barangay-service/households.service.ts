@@ -116,12 +116,18 @@ export class HouseholdsService {
   }
 
   async removeHousehold(householdUuid: string): Promise<void> {
-    const result = await this.householdRepository.delete({ householdUuid });
-    if (result.affected === 0) {
+    const household = await this.householdRepository.findOne({
+      where: { householdUuid },
+      relations: ['inhabitants'],
+    });
+    if (!household) {
       throw new NotFoundException(
         `Household with UUID ${householdUuid} not found`,
       );
     }
+    await this.inhabitantRepository.remove(household.inhabitants);
+    await this.householdRepository.remove(household);
+    console.log('all data deleted');
   }
 
   async findInhabitant(householdUuid: string): Promise<Inhabitant[]> {

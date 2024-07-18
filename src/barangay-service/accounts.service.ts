@@ -22,12 +22,9 @@ export class AccountsService {
 
   async createAccount(createAccountDto: CreateAccountDto): Promise<Account> {
     const { userName, password, firstName, lastName, role } = createAccountDto;
-
-    // Add logging to debug
     console.log('CreateAccountDto:', createAccountDto);
     console.log('Password:', password);
 
-    // Ensure password is not undefined
     if (!password) {
       throw new Error('Password is required');
     }
@@ -49,7 +46,9 @@ export class AccountsService {
   }
 
   async findOneRegisteredAccount(accountUuid: string): Promise<Account> {
-    const account = await this.accountRepository.findOneBy({ accountUuid });
+    const account = await this.accountRepository.findOne({
+      where: { accountUuid },
+    });
     if (!account) {
       throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }
@@ -60,18 +59,31 @@ export class AccountsService {
     accountUuid: string,
     updateAccountDto: UpdateAccountDto,
   ): Promise<Account> {
-    const account = await this.accountRepository.preload({
-      accountUuid: accountUuid,
-      ...updateAccountDto,
+    const account = await this.accountRepository.findOne({
+      where: { accountUuid },
     });
     if (!account) {
       throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }
-    return this.accountRepository.save(account);
+
+    const updateData: any = { ...updateAccountDto };
+
+    if (updateAccountDto.password) {
+      updateData.hash = await argon.hash(updateAccountDto.password);
+      delete updateData.password;
+    }
+
+    try {
+      await this.accountRepository.update({ accountUuid }, updateData);
+      return this.accountRepository.findOne({ where: { accountUuid } });
+    } catch (error) {
+      console.error('Error updating account:', error);
+      throw error;
+    }
   }
 
   async removeAccount(accountUuid: string): Promise<void> {
-    const result = await this.accountRepository.delete(accountUuid);
+    const result = await this.accountRepository.delete({ accountUuid });
     if (result.affected === 0) {
       throw new NotFoundException(`Account with ID ${accountUuid} not found`);
     }

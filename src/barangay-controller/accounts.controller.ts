@@ -32,7 +32,7 @@ export class AccountsController {
     return this.accountsService.findAllRegisteredAccount();
   }
   // @UseGuards(JwtAuthGuard)
-  @Get('registered-account/:uuid')
+  @Get(':uuid')
   findOneRegisteredAccount(@Param('uuid') uuid: string) {
     return this.accountsService.findOneRegisteredAccount(uuid);
   }
@@ -51,7 +51,6 @@ export class AccountsController {
   }
 
   // pra sa authentication ni dri
-
   @Post('auth-login')
   authLogin(@Body() authLoginDto: AuthLoginDto) {
     return this.accountsService.authLogin(authLoginDto);
