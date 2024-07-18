@@ -20,63 +20,6 @@ export class InhabitantService {
     private readonly householdsRepository: Repository<Household>,
   ) {}
 
-  // async createInhabitant(
-  //   householdUuid: string,
-  //   createInhabitantDto: CreateInhabitantDto,
-  //   file?: Express.Multer.File,
-  // ): Promise<Inhabitant> {
-  //   const household = await this.householdsRepository.findOne({
-  //     where: { householdUuid: householdUuid },
-  //   });
-  //   if (!household) {
-  //     throw new NotFoundException('Household not found');
-  //   }
-
-  //   const isRepresentative = convertToBoolean(
-  //     createInhabitantDto.isRepresentative,
-  //   );
-  //   const isRegisteredVoter = convertToBoolean(
-  //     createInhabitantDto.isRegisteredVoter,
-  //   );
-
-  //   const cleanDto = {
-  //     ...createInhabitantDto,
-  //     isRepresentative,
-  //     isRegisteredVoter,
-
-  //     gender: convertEmptyStringToNull(createInhabitantDto.gender),
-  //     birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
-  //     civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
-  //     bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
-  //     expectedLabourDate: convertEmptyStringToNull(
-  //       createInhabitantDto.expectedLabourDate,
-  //     ),
-  //     studentDetails: convertEmptyStringToNull(
-  //       createInhabitantDto.studentDetails,
-  //     ),
-  //     isPersonWithDisability: convertEmptyToNullBoolean(
-  //       createInhabitantDto.isPersonWithDisability,
-  //     ),
-  //     isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
-  //     isSingleParent: convertEmptyToNullBoolean(
-  //       createInhabitantDto.isSingleParent,
-  //     ),
-  //     isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
-  //   };
-
-  //   const newInhabitant = this.inhabitantsRepository.create({
-  //     ...cleanDto,
-  //     household,
-  //   });
-
-  //   if (file) {
-  //     newInhabitant.profilePhoto = file.path;
-  //   } else {
-  //     newInhabitant.profilePhoto = null;
-  //   }
-  //   return this.inhabitantsRepository.save(newInhabitant);
-  // }
-
   async createInhabitant(
     householdUuid: string,
     createInhabitantDto: CreateInhabitantDto,

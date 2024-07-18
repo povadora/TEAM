@@ -5,8 +5,8 @@ import { UpdateHouseholdDto } from "src/barangay-dto's/update-household.dto";
 import { Household } from 'src/barangay-entities/household.entity';
 import { Inhabitant } from 'src/inhabitant/entities/inhabitant.entity';
 import { OtherInhabitant } from 'src/other-inhabitants/entities/other-inhabitant.entity';
-import { convertEmptyToNullBoolean } from 'src/utils/helper';
 import { Repository } from 'typeorm';
+import { cleanHouseholdDto } from '../utils/household-dto-cleaner';
 
 @Injectable()
 export class HouseholdsService {
@@ -23,28 +23,14 @@ export class HouseholdsService {
     createHouseholdDto: CreateHouseholdDto,
     file?: Express.Multer.File,
   ): Promise<Household> {
-    const cleanDto = {
-      ...createHouseholdDto,
-      allowBoarders: convertEmptyToNullBoolean(
-        createHouseholdDto.allowBoarders,
-      ),
-      hasRentalPermit: convertEmptyToNullBoolean(
-        createHouseholdDto.hasRentalPermit,
-      ),
-      hasBackyardGarden: convertEmptyToNullBoolean(
-        createHouseholdDto.hasBackyardGarden,
-      ),
-    };
+    const cleanDto = cleanHouseholdDto(createHouseholdDto);
 
     const newHousehold = this.householdRepository.create({
       ...cleanDto,
     });
 
-    if (file) {
-      newHousehold.householdPhoto = file.path;
-    } else {
-      newHousehold.householdPhoto = null;
-    }
+    newHousehold.householdPhoto = file ? file.path : null;
+
     return this.householdRepository.save(newHousehold);
   }
 
@@ -80,18 +66,7 @@ export class HouseholdsService {
       );
     }
 
-    const cleanDto = {
-      ...updateHouseholdDto,
-      allowBoarders: convertEmptyToNullBoolean(
-        updateHouseholdDto.allowBoarders,
-      ),
-      hasRentalPermit: convertEmptyToNullBoolean(
-        updateHouseholdDto.hasRentalPermit,
-      ),
-      hasBackyardGarden: convertEmptyToNullBoolean(
-        updateHouseholdDto.hasBackyardGarden,
-      ),
-    };
+    const cleanDto = cleanHouseholdDto(updateHouseholdDto);
 
     console.log('Updating household:', householdUuid);
     console.log('Update data:', cleanDto);
