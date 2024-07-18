@@ -77,8 +77,9 @@ export class InhabitantController {
   updateInhabitant(
     @Param('uuid') uuid: string,
     @Body() updateInhabitantDto: UpdateInhabitantDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
+    console.log('UUID:', uuid);
     return this.inhabitantService.updateInhabitant(
       uuid,
       updateInhabitantDto,

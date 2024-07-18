@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Inhabitant } from './entities/inhabitant.entity';
 import { CreateInhabitantDto } from './dto/create-inhabitant.dto';
 import { UpdateInhabitantDto } from './dto/update-inhabitant.dto';
 import { Household } from 'src/barangay-entities/household.entity';
-import {
-  convertEmptyStringToNull,
-  convertEmptyToNullBoolean,
-  convertToBoolean,
-} from 'src/utils/helper';
+import { cleanDtoFields, cleanInhabitantDto } from 'src/utils/helper';
 
 @Injectable()
 export class InhabitantService {
@@ -20,60 +20,85 @@ export class InhabitantService {
     private readonly householdsRepository: Repository<Household>,
   ) {}
 
+  // async createInhabitant(
+  //   householdUuid: string,
+  //   createInhabitantDto: CreateInhabitantDto,
+  //   file?: Express.Multer.File,
+  // ): Promise<Inhabitant> {
+  //   const household = await this.householdsRepository.findOne({
+  //     where: { householdUuid: householdUuid },
+  //   });
+  //   if (!household) {
+  //     throw new NotFoundException('Household not found');
+  //   }
+
+  //   const isRepresentative = convertToBoolean(
+  //     createInhabitantDto.isRepresentative,
+  //   );
+  //   const isRegisteredVoter = convertToBoolean(
+  //     createInhabitantDto.isRegisteredVoter,
+  //   );
+
+  //   const cleanDto = {
+  //     ...createInhabitantDto,
+  //     isRepresentative,
+  //     isRegisteredVoter,
+
+  //     gender: convertEmptyStringToNull(createInhabitantDto.gender),
+  //     birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
+  //     civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
+  //     bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
+  //     expectedLabourDate: convertEmptyStringToNull(
+  //       createInhabitantDto.expectedLabourDate,
+  //     ),
+  //     studentDetails: convertEmptyStringToNull(
+  //       createInhabitantDto.studentDetails,
+  //     ),
+  //     isPersonWithDisability: convertEmptyToNullBoolean(
+  //       createInhabitantDto.isPersonWithDisability,
+  //     ),
+  //     isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
+  //     isSingleParent: convertEmptyToNullBoolean(
+  //       createInhabitantDto.isSingleParent,
+  //     ),
+  //     isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
+  //   };
+
+  //   const newInhabitant = this.inhabitantsRepository.create({
+  //     ...cleanDto,
+  //     household,
+  //   });
+
+  //   if (file) {
+  //     newInhabitant.profilePhoto = file.path;
+  //   } else {
+  //     newInhabitant.profilePhoto = null;
+  //   }
+  //   return this.inhabitantsRepository.save(newInhabitant);
+  // }
+
   async createInhabitant(
     householdUuid: string,
     createInhabitantDto: CreateInhabitantDto,
     file?: Express.Multer.File,
   ): Promise<Inhabitant> {
     const household = await this.householdsRepository.findOne({
-      where: { householdUuid: householdUuid },
+      where: { householdUuid },
     });
+
     if (!household) {
       throw new NotFoundException('Household not found');
     }
 
-    const isRepresentative = convertToBoolean(
-      createInhabitantDto.isRepresentative,
-    );
-    const isRegisteredVoter = convertToBoolean(
-      createInhabitantDto.isRegisteredVoter,
-    );
-
-    const cleanDto = {
-      ...createInhabitantDto,
-      isRepresentative,
-      isRegisteredVoter,
-
-      gender: convertEmptyStringToNull(createInhabitantDto.gender),
-      birthday: convertEmptyStringToNull(createInhabitantDto.birthday),
-      civilStatus: convertEmptyStringToNull(createInhabitantDto.civilStatus),
-      bloodType: convertEmptyStringToNull(createInhabitantDto.bloodType),
-      expectedLabourDate: convertEmptyStringToNull(
-        createInhabitantDto.expectedLabourDate,
-      ),
-      studentDetails: convertEmptyStringToNull(
-        createInhabitantDto.studentDetails,
-      ),
-      isPersonWithDisability: convertEmptyToNullBoolean(
-        createInhabitantDto.isPersonWithDisability,
-      ),
-      isPregnant: convertEmptyToNullBoolean(createInhabitantDto.isPregnant),
-      isSingleParent: convertEmptyToNullBoolean(
-        createInhabitantDto.isSingleParent,
-      ),
-      isStudent: convertEmptyToNullBoolean(createInhabitantDto.isStudent),
-    };
+    const cleanDto = cleanInhabitantDto(createInhabitantDto);
 
     const newInhabitant = this.inhabitantsRepository.create({
       ...cleanDto,
       household,
     });
 
-    if (file) {
-      newInhabitant.profilePhoto = file.path;
-    } else {
-      newInhabitant.profilePhoto = null;
-    }
+    newInhabitant.profilePhoto = file ? file.path : null;
+
     return this.inhabitantsRepository.save(newInhabitant);
   }
 
@@ -93,28 +118,46 @@ export class InhabitantService {
   }
 
   async updateInhabitant(
-    uuid: string,
+    inhabitantUuid: string,
     updateInhabitantDto: UpdateInhabitantDto,
     file?: Express.Multer.File,
   ): Promise<Inhabitant> {
     const inhabitant = await this.inhabitantsRepository.findOne({
-      where: { inhabitantUuid: uuid },
+      where: { inhabitantUuid },
     });
     if (!inhabitant) {
-      throw new NotFoundException(`Inhabitant with UUID ${uuid} not found`);
+      throw new NotFoundException(
+        `Inhabitant with UUID ${inhabitantUuid} not found`,
+      );
     }
 
-    const updatedInhabitant = {
-      ...inhabitant,
-      ...updateInhabitantDto,
-    };
+    const cleanDto = cleanDtoFields(updateInhabitantDto);
 
     if (file) {
-      updatedInhabitant.profilePhoto = file.path;
-    } else {
-      updatedInhabitant.profilePhoto = null;
+      cleanDto.profilePhoto = file.path;
     }
-    return this.inhabitantsRepository.save(updatedInhabitant);
+
+    if (updateInhabitantDto.householdUuid) {
+      const household = await this.householdsRepository.findOne({
+        where: { householdUuid: updateInhabitantDto.householdUuid },
+      });
+      if (!household) {
+        throw new NotFoundException(
+          `Household with UUID ${updateInhabitantDto.householdUuid} not found`,
+        );
+      }
+      cleanDto.household = household;
+    }
+
+    delete cleanDto.householdUuid;
+
+    try {
+      await this.inhabitantsRepository.update({ inhabitantUuid }, cleanDto);
+      return this.inhabitantsRepository.findOne({ where: { inhabitantUuid } });
+    } catch (error) {
+      console.error('Error updating inhabitant:', error);
+      throw new InternalServerErrorException('Failed to update inhabitant');
+    }
   }
 
   async removeInhabitant(inhabitantUuid: string): Promise<void> {

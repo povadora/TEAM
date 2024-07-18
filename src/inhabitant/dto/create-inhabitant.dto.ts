@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsEnum,
   IsDateString,
+  IsUUID,
 } from 'class-validator';
 import {
   householdRole,
@@ -15,6 +16,9 @@ import {
 } from '../enum/inhabitant.enum';
 
 export class CreateInhabitantDto {
+  @IsUUID()
+  householdUuid: string;
+
   @IsOptional()
   @IsString()
   profilePhoto: string;
